@@ -187,6 +187,10 @@ svg {
 	list-style: none;
 }
 
+.dkg-menu li {
+	position: relative;
+}
+
 .dkg-menu a {
 	display: block;
 	padding-block: 34px;
@@ -199,6 +203,50 @@ svg {
 .dkg-menu a:hover,
 .dkg-menu .current-menu-item > a {
 	color: var(--dkg-gold-dark);
+}
+
+.dkg-menu .menu-item-has-children {
+	position: relative;
+}
+
+.dkg-menu .menu-item-has-children > .sub-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 9999;
+	display: none;
+	min-width: 260px;
+	padding: 12px 0;
+	margin: 0;
+	list-style: none;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 15px 40px rgba(0, 0, 0, .15);
+}
+
+.dkg-menu .menu-item-has-children:hover > .sub-menu,
+.dkg-menu .menu-item-has-children:focus-within > .sub-menu {
+	display: block;
+}
+
+.dkg-menu .sub-menu li {
+	display: block;
+	width: 100%;
+}
+
+.dkg-menu .sub-menu a {
+	display: block;
+	padding: 14px 22px;
+	color: #222;
+	font-size: .86rem;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+.dkg-menu .sub-menu a:hover,
+.dkg-menu .sub-menu .current-menu-item > a {
+	background: #f7f4ed;
+	color: #222;
 }
 
 .dkg-header-actions {
@@ -1269,6 +1317,27 @@ svg {
 	.dkg-menu a {
 		padding: 13px 0;
 		border-bottom: 1px solid var(--dkg-border);
+	}
+
+	.dkg-menu .menu-item-has-children > .sub-menu {
+		position: static;
+		display: block;
+		min-width: 0;
+		padding: 0 0 0 16px;
+		background: transparent;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	.dkg-menu .sub-menu a {
+		padding: 11px 0;
+		color: #222;
+		font-size: .82rem;
+	}
+
+	.dkg-menu .sub-menu a:hover {
+		background: transparent;
+		color: var(--dkg-gold-dark);
 	}
 
 	.dkg-hero,
