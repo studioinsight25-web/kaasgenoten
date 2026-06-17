@@ -2,6 +2,8 @@
 /**
  * Kaas & Delicatessen page template.
  *
+ * Template Name: Kaas & Delicatessen
+ *
  * @package De_Kaasgenoten
  */
 

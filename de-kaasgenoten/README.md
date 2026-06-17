@@ -14,6 +14,7 @@ Custom WordPress/WooCommerce theme voor De Kaasgenoten.
    - `relatiegeschenken`
 4. Koppel het hoofdmenu aan de locatie `Hoofdmenu`.
 5. Koppel eventueel een footermenu aan de locatie `Footermenu`.
+6. Krijg je 404 op pagina's? Ga naar `Instellingen -> Permalinks` en klik een keer op `Wijzigingen opslaan`.
 
 ## Nieuwsbrief
 

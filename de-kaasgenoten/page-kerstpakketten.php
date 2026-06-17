@@ -2,6 +2,8 @@
 /**
  * Kerstpakketten page template.
  *
+ * Template Name: Kerstpakketten
+ *
  * @package De_Kaasgenoten
  */
 

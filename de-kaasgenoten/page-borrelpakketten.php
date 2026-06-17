@@ -2,6 +2,8 @@
 /**
  * Borrelpakketten page template.
  *
+ * Template Name: Borrelpakketten
+ *
  * @package De_Kaasgenoten
  */
 

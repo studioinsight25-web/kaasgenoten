@@ -9,10 +9,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DKG_VERSION', '1.0.0' );
+define( 'DKG_VERSION', '1.0.1' );
 
 function dkg_asset_uri( $path = '' ) {
 	return esc_url( get_template_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
+}
+
+function dkg_page_url( $path ) {
+	$path = trim( $path, '/' );
+	$page = get_page_by_path( $path );
+
+	if ( $page instanceof WP_Post && 'publish' === $page->post_status ) {
+		return get_permalink( $page );
+	}
+
+	return home_url( '/' . $path . '/' );
 }
 
 function dkg_shop_url() {
@@ -20,7 +31,7 @@ function dkg_shop_url() {
 		return wc_get_page_permalink( 'shop' );
 	}
 
-	return home_url( '/winkel/' );
+	return dkg_page_url( 'winkel' );
 }
 
 function dkg_product_category_url( $slug, $fallback = '' ) {
@@ -36,8 +47,23 @@ function dkg_product_category_url( $slug, $fallback = '' ) {
 		}
 	}
 
-	return $fallback ? home_url( $fallback ) : dkg_shop_url();
+	return $fallback ? dkg_page_url( $fallback ) : dkg_shop_url();
 }
+
+function dkg_flush_rewrites_on_switch() {
+	flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'dkg_flush_rewrites_on_switch' );
+
+function dkg_maybe_flush_rewrites_after_update() {
+	if ( get_option( 'dkg_theme_version' ) === DKG_VERSION ) {
+		return;
+	}
+
+	flush_rewrite_rules();
+	update_option( 'dkg_theme_version', DKG_VERSION );
+}
+add_action( 'init', 'dkg_maybe_flush_rewrites_after_update', 20 );
 
 function dkg_setup() {
 	load_theme_textdomain( 'de-kaasgenoten', get_template_directory() . '/languages' );
@@ -89,19 +115,19 @@ add_action( 'wp_enqueue_scripts', 'dkg_enqueue_assets' );
 
 function dkg_menu_fallback() {
 	$items = array(
-		'Kaas & Delicatessen' => '/kaas-delicatessen/',
-		'Borrelpakketten'     => '/borrelpakketten/',
-		'Kerstpakketten'      => '/kerstpakketten/',
-		'Relatiegeschenken'   => '/relatiegeschenken/',
-		'Zakelijk'            => '/zakelijk/',
-		'Contact'             => '/contact/',
+		'Kaas & Delicatessen' => 'kaas-delicatessen',
+		'Borrelpakketten'     => 'borrelpakketten',
+		'Kerstpakketten'      => 'kerstpakketten',
+		'Relatiegeschenken'   => 'relatiegeschenken',
+		'Zakelijk'            => 'zakelijk',
+		'Contact'             => 'contact',
 	);
 
 	echo '<ul id="primary-menu" class="dkg-menu">';
 	foreach ( $items as $label => $url ) {
 		printf(
 			'<li><a href="%s">%s</a></li>',
-			esc_url( home_url( $url ) ),
+			esc_url( dkg_page_url( $url ) ),
 			esc_html( $label )
 		);
 	}

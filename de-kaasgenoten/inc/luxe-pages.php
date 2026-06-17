@@ -17,7 +17,7 @@ function dkg_luxe_page_data( $key ) {
 			'intro'   => __( 'Ontdek smaakvolle kazen, verfijnde delicatessen en borrelproducten die elke tafel bijzonder maken.', 'de-kaasgenoten' ),
 			'image'   => 'cat-delicatessen.jpg',
 			'cta'     => __( 'Bekijk kaas & delicatessen', 'de-kaasgenoten' ),
-			'url'     => dkg_product_category_url( 'kaas-delicatessen', '/kaas-delicatessen/' ),
+			'url'     => dkg_product_category_url( 'kaas-delicatessen', 'kaas-delicatessen' ),
 			'cards'   => array(
 				array( 'title' => __( 'Kazen met karakter', 'de-kaasgenoten' ), 'text' => __( 'Van jong belegen tot uitgesproken specialiteiten.', 'de-kaasgenoten' ) ),
 				array( 'title' => __( 'Delicatessen voor erbij', 'de-kaasgenoten' ), 'text' => __( 'Olijven, noten, chutneys en ambachtelijke smaakmakers.', 'de-kaasgenoten' ) ),
@@ -30,7 +30,7 @@ function dkg_luxe_page_data( $key ) {
 			'intro'   => __( 'Rijk gevulde pakketten met kaas, delicatessen en smaakvolle extra’s voor elk gezelschap.', 'de-kaasgenoten' ),
 			'image'   => 'promo-pakketten.jpg',
 			'cta'     => __( 'Bekijk borrelpakketten', 'de-kaasgenoten' ),
-			'url'     => dkg_product_category_url( 'borrelpakketten', '/borrelpakketten/' ),
+			'url'     => dkg_product_category_url( 'borrelpakketten', 'borrelpakketten' ),
 			'cards'   => array(
 				array( 'title' => __( 'Voor thuis of op kantoor', 'de-kaasgenoten' ), 'text' => __( 'Snel iets bijzonders op tafel zonder gedoe.', 'de-kaasgenoten' ) ),
 				array( 'title' => __( 'Mooi verpakt', 'de-kaasgenoten' ), 'text' => __( 'Een verzorgde uitstraling vanaf het moment van openen.', 'de-kaasgenoten' ) ),
@@ -43,7 +43,7 @@ function dkg_luxe_page_data( $key ) {
 			'intro'   => __( 'Luxe kerstpakketten met ambachtelijke kazen, delicatessen en warme feestelijke details.', 'de-kaasgenoten' ),
 			'image'   => 'cat-pakketten.jpg',
 			'cta'     => __( 'Bekijk kerstpakketten', 'de-kaasgenoten' ),
-			'url'     => dkg_product_category_url( 'kerstpakketten', '/kerstpakketten/' ),
+			'url'     => dkg_product_category_url( 'kerstpakketten', 'kerstpakketten' ),
 			'cards'   => array(
 				array( 'title' => __( 'Voor teams en relaties', 'de-kaasgenoten' ), 'text' => __( 'Een smaakvol bedankje aan het einde van het jaar.', 'de-kaasgenoten' ) ),
 				array( 'title' => __( 'Op maat mogelijk', 'de-kaasgenoten' ), 'text' => __( 'Stem inhoud, budget en bezorgmoment af.', 'de-kaasgenoten' ) ),
@@ -56,7 +56,7 @@ function dkg_luxe_page_data( $key ) {
 			'intro'   => __( 'Versterk relaties met een stijlvol kaaspakket dat persoonlijk, verzorgd en memorabel aanvoelt.', 'de-kaasgenoten' ),
 			'image'   => 'cat-zakelijk.jpg',
 			'cta'     => __( 'Bekijk relatiegeschenken', 'de-kaasgenoten' ),
-			'url'     => dkg_product_category_url( 'relatiegeschenken', '/relatiegeschenken/' ),
+			'url'     => dkg_product_category_url( 'relatiegeschenken', 'relatiegeschenken' ),
 			'cards'   => array(
 				array( 'title' => __( 'Voor klanten', 'de-kaasgenoten' ), 'text' => __( 'Een onderscheidend cadeau dat blijft hangen.', 'de-kaasgenoten' ) ),
 				array( 'title' => __( 'Voor medewerkers', 'de-kaasgenoten' ), 'text' => __( 'Laat waardering zien met kwaliteit en aandacht.', 'de-kaasgenoten' ) ),
@@ -69,7 +69,7 @@ function dkg_luxe_page_data( $key ) {
 			'intro'   => __( 'Voor bedrijven die relaties, medewerkers of gasten iets smaakvols en verzorgds willen geven.', 'de-kaasgenoten' ),
 			'image'   => 'promo-zakelijk.jpg',
 			'cta'     => __( 'Neem contact op', 'de-kaasgenoten' ),
-			'url'     => home_url( '/contact/' ),
+			'url'     => dkg_page_url( 'contact' ),
 			'cards'   => array(
 				array( 'title' => __( 'Maatwerk per budget', 'de-kaasgenoten' ), 'text' => __( 'Van compact geschenk tot royaal pakket.', 'de-kaasgenoten' ) ),
 				array( 'title' => __( 'Meerdere adressen', 'de-kaasgenoten' ), 'text' => __( 'Handig voor teams, klanten en landelijke levering.', 'de-kaasgenoten' ) ),

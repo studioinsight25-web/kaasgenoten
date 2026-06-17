@@ -58,8 +58,8 @@
 
 		<div class="dkg-header-actions">
 			<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" aria-label="<?php esc_attr_e( 'Zoeken', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
-			<a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/mijn-account/' ) ); ?>" aria-label="<?php esc_attr_e( 'Mijn account', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
-			<a class="dkg-cart-link" href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_cart_url() : home_url( '/winkelwagen/' ) ); ?>" aria-label="<?php esc_attr_e( 'Winkelwagen', 'de-kaasgenoten' ); ?>">
+			<a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'myaccount' ) : dkg_page_url( 'mijn-account' ) ); ?>" aria-label="<?php esc_attr_e( 'Mijn account', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+			<a class="dkg-cart-link" href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_cart_url() : dkg_page_url( 'winkelwagen' ) ); ?>" aria-label="<?php esc_attr_e( 'Winkelwagen', 'de-kaasgenoten' ); ?>">
 				<?php echo dkg_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<span class="dkg-cart-count"><?php echo esc_html( dkg_cart_count() ); ?></span>
 			</a>
