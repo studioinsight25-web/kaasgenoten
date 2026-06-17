@@ -117,5 +117,56 @@ function dkg_popular_products() {
 	}
 }
 
+function dkg_product_archive_filter_terms() {
+	if ( ! is_product_category() ) {
+		return array();
+	}
+
+	$term = get_queried_object();
+
+	if ( ! $term instanceof WP_Term ) {
+		return array();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => $term->term_id,
+		)
+	);
+
+	if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+		return $terms;
+	}
+
+	if ( 'kaas' !== $term->slug ) {
+		return array();
+	}
+
+	$age_slugs = array( 'jong', 'jong-belegen', 'belegen', 'extra-belegen', 'oud' );
+	$terms     = array();
+
+	foreach ( $age_slugs as $slug ) {
+		$age_term = get_term_by( 'slug', $slug, 'product_cat' );
+
+		if ( $age_term instanceof WP_Term ) {
+			$terms[] = $age_term;
+		}
+	}
+
+	return $terms;
+}
+
+function dkg_product_excerpt( $product ) {
+	$text = $product->get_short_description();
+
+	if ( ! $text ) {
+		$text = $product->get_description();
+	}
+
+	return wp_trim_words( wp_strip_all_tags( $text ), 16 );
+}
+
 remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
 remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );

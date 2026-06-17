@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DKG_VERSION', '1.0.1' );
+define( 'DKG_VERSION', '1.0.2' );
 
 function dkg_asset_uri( $path = '' ) {
 	return esc_url( get_template_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
