@@ -6,9 +6,15 @@
  */
 
 get_header();
+
+$content_classes = 'dkg-container dkg-content-wrap';
+
+if ( function_exists( 'is_cart' ) && ( is_cart() || is_checkout() || is_account_page() ) ) {
+	$content_classes .= ' dkg-content-wrap-wide dkg-woo-page-wrap';
+}
 ?>
 <main id="primary" class="dkg-main dkg-content-page">
-	<div class="dkg-container dkg-content-wrap">
+	<div class="<?php echo esc_attr( $content_classes ); ?>">
 		<?php
 		while ( have_posts() ) :
 			the_post();

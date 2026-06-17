@@ -15,6 +15,30 @@ function dkg_asset_uri( $path = '' ) {
 	return esc_url( get_template_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
 }
 
+function dkg_shop_url() {
+	if ( class_exists( 'WooCommerce' ) ) {
+		return wc_get_page_permalink( 'shop' );
+	}
+
+	return home_url( '/winkel/' );
+}
+
+function dkg_product_category_url( $slug, $fallback = '' ) {
+	if ( class_exists( 'WooCommerce' ) && taxonomy_exists( 'product_cat' ) ) {
+		$term = get_term_by( 'slug', $slug, 'product_cat' );
+
+		if ( $term && ! is_wp_error( $term ) ) {
+			$link = get_term_link( $term );
+
+			if ( ! is_wp_error( $link ) ) {
+				return $link;
+			}
+		}
+	}
+
+	return $fallback ? home_url( $fallback ) : dkg_shop_url();
+}
+
 function dkg_setup() {
 	load_theme_textdomain( 'de-kaasgenoten', get_template_directory() . '/languages' );
 
@@ -32,12 +56,30 @@ function dkg_setup() {
 	add_theme_support( 'wc-product-gallery-lightbox' );
 	add_theme_support( 'wc-product-gallery-slider' );
 
+	add_image_size( 'dkg-card', 720, 475, true );
+	add_image_size( 'dkg-hero', 1728, 910, true );
+
 	register_nav_menus( array(
 		'primary' => __( 'Hoofdmenu', 'de-kaasgenoten' ),
 		'footer'  => __( 'Footermenu', 'de-kaasgenoten' ),
 	) );
 }
 add_action( 'after_setup_theme', 'dkg_setup' );
+
+function dkg_widgets_init() {
+	register_sidebar(
+		array(
+			'name'          => __( 'Footer nieuwsbrief', 'de-kaasgenoten' ),
+			'id'            => 'footer-newsletter',
+			'description'   => __( 'Plaats hier bijvoorbeeld het MailPoet inschrijfformulier.', 'de-kaasgenoten' ),
+			'before_widget' => '<div id="%1$s" class="dkg-newsletter-widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h2>',
+			'after_title'   => '</h2>',
+		)
+	);
+}
+add_action( 'widgets_init', 'dkg_widgets_init' );
 
 function dkg_enqueue_assets() {
 	wp_enqueue_style( 'dkg-theme', get_template_directory_uri() . '/assets/css/theme.css', array(), DKG_VERSION );
@@ -47,12 +89,12 @@ add_action( 'wp_enqueue_scripts', 'dkg_enqueue_assets' );
 
 function dkg_menu_fallback() {
 	$items = array(
-		'Kaas'                  => '/product-category/kaas/',
-		'Delicatessen'          => '/product-category/delicatessen/',
-		'Pakketten & Geschenken' => '/product-category/pakketten-geschenken/',
-		'Zakelijk'              => '/zakelijk/',
-		'Over ons'              => '/over-ons/',
-		'Contact'               => '/contact/',
+		'Kaas & Delicatessen' => '/kaas-delicatessen/',
+		'Borrelpakketten'     => '/borrelpakketten/',
+		'Kerstpakketten'      => '/kerstpakketten/',
+		'Relatiegeschenken'   => '/relatiegeschenken/',
+		'Zakelijk'            => '/zakelijk/',
+		'Contact'             => '/contact/',
 	);
 
 	echo '<ul id="primary-menu" class="dkg-menu">';
@@ -82,99 +124,5 @@ function dkg_icon( $name ) {
 	return isset( $icons[ $name ] ) ? $icons[ $name ] : '';
 }
 
-function dkg_cart_count() {
-	if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart ) {
-		return 0;
-	}
-
-	return (int) WC()->cart->get_cart_contents_count();
-}
-
-function dkg_cart_count_fragment( $fragments ) {
-	ob_start();
-	?>
-	<span class="dkg-cart-count"><?php echo esc_html( dkg_cart_count() ); ?></span>
-	<?php
-	$fragments['span.dkg-cart-count'] = ob_get_clean();
-	return $fragments;
-}
-add_filter( 'woocommerce_add_to_cart_fragments', 'dkg_cart_count_fragment' );
-
-function dkg_fallback_products() {
-	return array(
-		array( 'name' => 'Oude Hollandse Kaas', 'weight' => '500 gram', 'price' => '€ 8,95', 'image' => 'product-oude.jpg' ),
-		array( 'name' => 'Extra Belegen Kaas', 'weight' => '500 gram', 'price' => '€ 7,95', 'image' => 'product-extra.jpg' ),
-		array( 'name' => 'Jonge Belegen Kaas', 'weight' => '500 gram', 'price' => '€ 6,95', 'image' => 'product-jonge.jpg' ),
-		array( 'name' => 'Boerenkaas Overjarig', 'weight' => '500 gram', 'price' => '€ 9,95', 'image' => 'product-boeren.jpg' ),
-		array( 'name' => 'Truffelkaas', 'weight' => '500 gram', 'price' => '€ 10,95', 'image' => 'product-truffel.jpg' ),
-		array( 'name' => 'Geitenkaas Naturel', 'weight' => '500 gram', 'price' => '€ 7,95', 'image' => 'product-geiten.jpg' ),
-	);
-}
-
-function dkg_product_card_from_product( $product ) {
-	$product_id = $product->get_id();
-	?>
-	<article class="dkg-product-card">
-		<a class="dkg-product-image" href="<?php echo esc_url( get_permalink( $product_id ) ); ?>">
-			<?php echo $product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</a>
-		<div class="dkg-product-body">
-			<h3><a href="<?php echo esc_url( get_permalink( $product_id ) ); ?>"><?php echo esc_html( $product->get_name() ); ?></a></h3>
-			<?php if ( $product->get_weight() ) : ?>
-				<p><?php echo esc_html( wc_format_weight( $product->get_weight() ) ); ?></p>
-			<?php endif; ?>
-			<div class="dkg-product-price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
-			<div class="dkg-product-actions">
-				<a class="button dkg-add-to-cart" href="<?php echo esc_url( $product->add_to_cart_url() ); ?>" data-quantity="1" data-product_id="<?php echo esc_attr( $product_id ); ?>" data-product_sku="<?php echo esc_attr( $product->get_sku() ); ?>" aria-label="<?php echo esc_attr( $product->add_to_cart_description() ); ?>" rel="nofollow">
-					<?php esc_html_e( 'In winkelwagen', 'de-kaasgenoten' ); ?>
-				</a>
-				<span class="dkg-wishlist" aria-hidden="true"><?php echo dkg_icon( 'heart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-			</div>
-		</div>
-	</article>
-	<?php
-}
-
-function dkg_product_card_from_fallback( $product ) {
-	?>
-	<article class="dkg-product-card">
-		<a class="dkg-product-image" href="<?php echo esc_url( home_url( '/winkel/' ) ); ?>">
-			<img src="<?php echo dkg_asset_uri( 'images/' . $product['image'] ); ?>" alt="<?php echo esc_attr( $product['name'] ); ?>">
-		</a>
-		<div class="dkg-product-body">
-			<h3><a href="<?php echo esc_url( home_url( '/winkel/' ) ); ?>"><?php echo esc_html( $product['name'] ); ?></a></h3>
-			<p><?php echo esc_html( $product['weight'] ); ?></p>
-			<div class="dkg-product-price"><?php echo esc_html( $product['price'] ); ?></div>
-			<div class="dkg-product-actions">
-				<a class="button dkg-add-to-cart" href="<?php echo esc_url( home_url( '/winkel/' ) ); ?>"><?php esc_html_e( 'In winkelwagen', 'de-kaasgenoten' ); ?></a>
-				<span class="dkg-wishlist" aria-hidden="true"><?php echo dkg_icon( 'heart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-			</div>
-		</div>
-	</article>
-	<?php
-}
-
-function dkg_popular_products() {
-	if ( class_exists( 'WooCommerce' ) ) {
-		$products = wc_get_products( array(
-			'status'  => 'publish',
-			'limit'   => 6,
-			'orderby' => 'popularity',
-			'order'   => 'DESC',
-		) );
-
-		if ( ! empty( $products ) ) {
-			foreach ( $products as $product ) {
-				dkg_product_card_from_product( $product );
-			}
-			return;
-		}
-	}
-
-	foreach ( dkg_fallback_products() as $product ) {
-		dkg_product_card_from_fallback( $product );
-	}
-}
-
-remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
-remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+require get_template_directory() . '/inc/woocommerce.php';
+require get_template_directory() . '/inc/luxe-pages.php';

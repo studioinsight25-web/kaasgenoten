@@ -8,24 +8,24 @@
 get_header();
 
 $categories = array(
-	array( 'title' => 'Kaas', 'image' => 'cat-kaas.jpg', 'url' => '/product-category/kaas/' ),
-	array( 'title' => 'Delicatessen', 'image' => 'cat-delicatessen.jpg', 'url' => '/product-category/delicatessen/' ),
-	array( 'title' => 'Wijn & Dranken', 'image' => 'cat-wijn.jpg', 'url' => '/product-category/wijn-dranken/' ),
-	array( 'title' => 'Noten & Olijven', 'image' => 'cat-noten.jpg', 'url' => '/product-category/noten-olijven/' ),
-	array( 'title' => 'Pakketten & Geschenken', 'image' => 'cat-pakketten.jpg', 'url' => '/product-category/pakketten-geschenken/' ),
+	array( 'title' => 'Kaas', 'image' => 'cat-kaas.jpg', 'url' => '/kaas-delicatessen/' ),
+	array( 'title' => 'Delicatessen', 'image' => 'cat-delicatessen.jpg', 'url' => '/kaas-delicatessen/' ),
+	array( 'title' => 'Wijn & Dranken', 'image' => 'cat-wijn.jpg', 'url' => '/kaas-delicatessen/' ),
+	array( 'title' => 'Noten & Olijven', 'image' => 'cat-noten.jpg', 'url' => '/borrelpakketten/' ),
+	array( 'title' => 'Pakketten & Geschenken', 'image' => 'cat-pakketten.jpg', 'url' => '/borrelpakketten/' ),
 	array( 'title' => 'Zakelijk', 'image' => 'cat-zakelijk.jpg', 'url' => '/zakelijk/' ),
 );
 ?>
 
 <main id="primary" class="dkg-main">
-	<section class="dkg-hero dkg-hero-image-only" style="background-image: url('<?php echo dkg_asset_uri( 'images/hero.jpg' ); ?>');" aria-label="<?php esc_attr_e( 'Voor elke gelegenheid het perfecte cadeau', 'de-kaasgenoten' ); ?>">
+	<section class="dkg-hero dkg-hero-luxe" style="background-image: linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.64) 36%, rgba(0,0,0,.12) 72%), url('<?php echo dkg_asset_uri( 'images/hero-clean.jpg' ); ?>');" aria-label="<?php esc_attr_e( 'Voor elke gelegenheid het perfecte cadeau', 'de-kaasgenoten' ); ?>">
 		<div class="dkg-container dkg-hero-inner">
 			<p class="dkg-eyebrow"><?php esc_html_e( 'Kaas, delicatessen & geschenken', 'de-kaasgenoten' ); ?></p>
 			<h1><?php esc_html_e( 'Voor elke gelegenheid het perfecte cadeau', 'de-kaasgenoten' ); ?></h1>
 			<p><?php esc_html_e( 'Ambachtelijke kazen, heerlijke delicatessen en smaakvolle geschenkpakketten. Met zorg samengesteld, met liefde gegeven.', 'de-kaasgenoten' ); ?></p>
 			<div class="dkg-hero-actions">
-				<a class="dkg-button dkg-button-gold" href="<?php echo esc_url( home_url( '/product-category/pakketten-geschenken/' ) ); ?>"><?php esc_html_e( 'Bekijk cadeaupakketten', 'de-kaasgenoten' ); ?></a>
-				<a class="dkg-button dkg-button-dark" href="<?php echo esc_url( home_url( '/product-category/kaas/' ) ); ?>"><?php esc_html_e( 'Bekijk ons kaasassortiment', 'de-kaasgenoten' ); ?></a>
+				<a class="dkg-button dkg-button-gold" href="<?php echo esc_url( dkg_product_category_url( 'borrelpakketten', '/borrelpakketten/' ) ); ?>"><?php esc_html_e( 'Bekijk cadeaupakketten', 'de-kaasgenoten' ); ?></a>
+				<a class="dkg-button dkg-button-dark" href="<?php echo esc_url( dkg_product_category_url( 'kaas', '/kaas-delicatessen/' ) ); ?>"><?php esc_html_e( 'Bekijk ons kaasassortiment', 'de-kaasgenoten' ); ?></a>
 			</div>
 		</div>
 	</section>
@@ -43,12 +43,12 @@ $categories = array(
 
 	<section class="dkg-section dkg-promo-section">
 		<div class="dkg-container dkg-promo-grid">
-			<a class="dkg-promo-card" href="<?php echo esc_url( home_url( '/product-category/pakketten-geschenken/' ) ); ?>" style="background-image: linear-gradient(90deg, rgba(16,37,27,.94), rgba(16,37,27,.48)), url('<?php echo dkg_asset_uri( 'images/promo-pakketten.jpg' ); ?>');">
+			<a class="dkg-promo-card" href="<?php echo esc_url( dkg_product_category_url( 'borrelpakketten', '/borrelpakketten/' ) ); ?>" style="background-image: linear-gradient(90deg, rgba(16,37,27,.9) 0%, rgba(16,37,27,.64) 36%, rgba(16,37,27,.12) 72%), url('<?php echo dkg_asset_uri( 'images/promo-pakketten.jpg' ); ?>');">
 				<h2><?php esc_html_e( 'Cadeaupakketten voor elk moment', 'de-kaasgenoten' ); ?></h2>
 				<p><?php esc_html_e( 'Van bedankje tot verjaardag of jubileum. Kant-en-klaar of volledig op maat.', 'de-kaasgenoten' ); ?></p>
 				<span class="dkg-button dkg-button-gold"><?php esc_html_e( 'Bekijk alle pakketten', 'de-kaasgenoten' ); ?> →</span>
 			</a>
-			<a class="dkg-promo-card" href="<?php echo esc_url( home_url( '/zakelijk/' ) ); ?>" style="background-image: linear-gradient(90deg, rgba(16,37,27,.94), rgba(16,37,27,.42)), url('<?php echo dkg_asset_uri( 'images/promo-zakelijk.jpg' ); ?>');">
+			<a class="dkg-promo-card" href="<?php echo esc_url( home_url( '/zakelijk/' ) ); ?>" style="background-image: linear-gradient(90deg, rgba(16,37,27,.9) 0%, rgba(16,37,27,.64) 36%, rgba(16,37,27,.12) 72%), url('<?php echo dkg_asset_uri( 'images/promo-zakelijk.jpg' ); ?>');">
 				<h2><?php esc_html_e( 'Zakelijk & relatiegeschenken', 'de-kaasgenoten' ); ?></h2>
 				<p><?php esc_html_e( 'Maak indruk met een stijlvol geschenk. Voor klanten, medewerkers en zakelijke relaties.', 'de-kaasgenoten' ); ?></p>
 				<span class="dkg-button dkg-button-outline"><?php esc_html_e( 'Meer over zakelijk', 'de-kaasgenoten' ); ?> →</span>
@@ -69,7 +69,7 @@ $categories = array(
 		<div class="dkg-container">
 			<div class="dkg-section-heading">
 				<h2><?php esc_html_e( 'Populaire kazen', 'de-kaasgenoten' ); ?></h2>
-				<a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/winkel/' ) ); ?>"><?php esc_html_e( 'Bekijk alle kazen', 'de-kaasgenoten' ); ?> →</a>
+				<a href="<?php echo esc_url( dkg_product_category_url( 'kaas', '/kaas-delicatessen/' ) ); ?>"><?php esc_html_e( 'Bekijk alle kazen', 'de-kaasgenoten' ); ?> →</a>
 			</div>
 			<div class="dkg-product-grid">
 				<?php dkg_popular_products(); ?>
