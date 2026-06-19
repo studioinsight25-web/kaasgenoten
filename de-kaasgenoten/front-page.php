@@ -7,13 +7,15 @@
 
 get_header();
 
+// 'cat' = WooCommerce productcategorie-slug (gebruikt indien aanwezig),
+// 'fallback' = paginaslug wanneer de categorie niet bestaat.
 $categories = array(
-	array( 'title' => 'Kaas', 'image' => 'cat-kaas.jpg', 'url' => 'kaas-delicatessen' ),
-	array( 'title' => 'Delicatessen', 'image' => 'cat-delicatessen.jpg', 'url' => 'kaas-delicatessen' ),
-	array( 'title' => 'Wijn & Dranken', 'image' => 'cat-wijn.jpg', 'url' => 'kaas-delicatessen' ),
-	array( 'title' => 'Noten & Olijven', 'image' => 'cat-noten.jpg', 'url' => 'borrelpakketten' ),
-	array( 'title' => 'Pakketten & Geschenken', 'image' => 'cat-pakketten.jpg', 'url' => 'borrelpakketten' ),
-	array( 'title' => 'Zakelijk', 'image' => 'cat-zakelijk.jpg', 'url' => 'zakelijk' ),
+	array( 'title' => 'Kaas', 'image' => 'cat-kaas.jpg', 'cat' => 'kaas', 'fallback' => 'kaas-delicatessen' ),
+	array( 'title' => 'Delicatessen', 'image' => 'cat-delicatessen.jpg', 'cat' => 'delicatessen', 'fallback' => 'kaas-delicatessen' ),
+	array( 'title' => 'Wijn & Dranken', 'image' => 'cat-wijn.jpg', 'cat' => 'wijn-dranken', 'fallback' => 'kaas-delicatessen' ),
+	array( 'title' => 'Noten & Olijven', 'image' => 'cat-noten.jpg', 'cat' => 'noten-olijven', 'fallback' => 'borrelpakketten' ),
+	array( 'title' => 'Pakketten & Geschenken', 'image' => 'cat-pakketten.jpg', 'cat' => 'borrelpakketten', 'fallback' => 'borrelpakketten' ),
+	array( 'title' => 'Zakelijk', 'image' => 'cat-zakelijk.jpg', 'cat' => '', 'fallback' => 'zakelijk' ),
 );
 ?>
 
@@ -32,9 +34,14 @@ $categories = array(
 
 	<section class="dkg-section dkg-category-section">
 		<div class="dkg-container dkg-category-grid">
-			<?php foreach ( $categories as $category ) : ?>
-				<a class="dkg-category-card" href="<?php echo esc_url( dkg_page_url( $category['url'] ) ); ?>">
-					<img src="<?php echo dkg_asset_uri( 'images/' . $category['image'] ); ?>" alt="<?php echo esc_attr( $category['title'] ); ?>">
+			<?php
+			foreach ( $categories as $category ) :
+				$category_url = ! empty( $category['cat'] )
+					? dkg_product_category_url( $category['cat'], $category['fallback'] )
+					: dkg_page_url( $category['fallback'] );
+				?>
+				<a class="dkg-category-card" href="<?php echo esc_url( $category_url ); ?>">
+					<img src="<?php echo dkg_asset_uri( 'images/' . $category['image'] ); ?>" alt="<?php echo esc_attr( $category['title'] ); ?>" loading="lazy" decoding="async">
 					<span><?php echo esc_html( $category['title'] ); ?></span>
 				</a>
 			<?php endforeach; ?>
@@ -79,7 +86,23 @@ $categories = array(
 
 	<section class="dkg-section dkg-trust-section">
 		<div class="dkg-container dkg-trust-grid">
-			<div class="dkg-rating"><strong><?php esc_html_e( 'Klanten beoordelen ons met een 4,9/5', 'de-kaasgenoten' ); ?></strong><span>★★★★★</span><small><?php esc_html_e( 'Gebaseerd op 500+ reviews', 'de-kaasgenoten' ); ?></small></div>
+			<?php
+			$dkg_rating = dkg_trust_rating();
+			if ( ! empty( $dkg_rating['show'] ) ) :
+				?>
+				<div class="dkg-rating">
+					<?php if ( ! empty( $dkg_rating['score'] ) ) : ?>
+						<strong><?php printf( esc_html__( 'Klanten beoordelen ons met een %s', 'de-kaasgenoten' ), esc_html( $dkg_rating['score'] ) ); ?></strong>
+						<span>★★★★★</span>
+						<?php if ( ! empty( $dkg_rating['count'] ) ) : ?>
+							<small><?php printf( esc_html__( 'Gebaseerd op %s', 'de-kaasgenoten' ), esc_html( $dkg_rating['count'] ) ); ?></small>
+						<?php endif; ?>
+					<?php else : ?>
+						<strong><?php esc_html_e( 'Gewaardeerd om kwaliteit en service', 'de-kaasgenoten' ); ?></strong>
+						<small><?php esc_html_e( 'Met zorg geselecteerd assortiment', 'de-kaasgenoten' ); ?></small>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 			<div class="dkg-trust-item"><?php echo dkg_icon( 'box' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><div><strong><?php esc_html_e( 'Veilig betalen', 'de-kaasgenoten' ); ?></strong><span><?php esc_html_e( 'iDEAL, Creditcard, Bancontact en meer', 'de-kaasgenoten' ); ?></span></div></div>
 			<div class="dkg-trust-item"><?php echo dkg_icon( 'truck' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><div><strong><?php esc_html_e( 'Gratis verzending vanaf €75', 'de-kaasgenoten' ); ?></strong><span><?php esc_html_e( 'Binnen Nederland', 'de-kaasgenoten' ); ?></span></div></div>
 			<div class="dkg-trust-item"><?php echo dkg_icon( 'heart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><div><strong><?php esc_html_e( '14 dagen bedenktijd', 'de-kaasgenoten' ); ?></strong><span><?php esc_html_e( 'Niet tevreden? Geld terug.', 'de-kaasgenoten' ); ?></span></div></div>
@@ -91,8 +114,8 @@ $categories = array(
 			<article class="dkg-ai-panel">
 				<div>
 					<h2><?php esc_html_e( 'Hulp nodig bij kiezen?', 'de-kaasgenoten' ); ?></h2>
-					<p><?php esc_html_e( 'Onze AI smaakadviseur helpt je het perfecte pakket of de juiste kaas te vinden.', 'de-kaasgenoten' ); ?></p>
-					<a class="dkg-button dkg-button-gold" href="<?php echo esc_url( dkg_page_url( 'smaakadviseur' ) ); ?>"><?php esc_html_e( 'Probeer de smaakadviseur', 'de-kaasgenoten' ); ?> →</a>
+					<p><?php esc_html_e( 'Onze kaasspecialisten helpen je graag het perfecte pakket of de juiste kaas te vinden.', 'de-kaasgenoten' ); ?></p>
+					<a class="dkg-button dkg-button-gold" href="<?php echo esc_url( dkg_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Vraag persoonlijk advies', 'de-kaasgenoten' ); ?> →</a>
 				</div>
 				<span class="dkg-ai-icon" aria-hidden="true">?</span>
 			</article>
@@ -106,7 +129,7 @@ $categories = array(
 						<strong>Achie’s <span>Biokazen</span></strong>
 					</div>
 				</div>
-				<img src="<?php echo dkg_asset_uri( 'images/about-founders.jpg' ); ?>" alt="<?php esc_attr_e( 'Ondernemers van De Kaasgenoten', 'de-kaasgenoten' ); ?>">
+				<img src="<?php echo dkg_asset_uri( 'images/about-founders.jpg' ); ?>" alt="<?php esc_attr_e( 'Ondernemers van De Kaasgenoten', 'de-kaasgenoten' ); ?>" loading="lazy" decoding="async">
 			</a>
 		</div>
 	</section>

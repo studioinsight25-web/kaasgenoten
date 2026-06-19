@@ -25,7 +25,10 @@ function dkg_cart_count_fragment( $fragments ) {
 	$fragments['span.dkg-cart-count'] = ob_get_clean();
 	return $fragments;
 }
-add_filter( 'woocommerce_add_to_cart_fragments', 'dkg_cart_count_fragment' );
+
+if ( class_exists( 'WooCommerce' ) ) {
+	add_filter( 'woocommerce_add_to_cart_fragments', 'dkg_cart_count_fragment' );
+}
 
 function dkg_fallback_products() {
 	return array(
@@ -78,7 +81,7 @@ function dkg_product_card_from_fallback( $product ) {
 	?>
 	<article class="dkg-product-card">
 		<a class="dkg-product-image" href="<?php echo esc_url( dkg_shop_url() ); ?>">
-			<img src="<?php echo dkg_asset_uri( 'images/' . $product['image'] ); ?>" alt="<?php echo esc_attr( $product['name'] ); ?>">
+			<img src="<?php echo dkg_asset_uri( 'images/' . $product['image'] ); ?>" alt="<?php echo esc_attr( $product['name'] ); ?>" loading="lazy" decoding="async">
 		</a>
 		<div class="dkg-product-body">
 			<h3><a href="<?php echo esc_url( dkg_shop_url() ); ?>"><?php echo esc_html( $product['name'] ); ?></a></h3>
@@ -115,6 +118,106 @@ function dkg_popular_products() {
 	foreach ( dkg_fallback_products() as $product ) {
 		dkg_product_card_from_fallback( $product );
 	}
+}
+
+/**
+ * Haal producten op uit een specifieke productcategorie.
+ *
+ * Geeft een lege array terug wanneer WooCommerce inactief is of de
+ * categorie (nog) geen producten bevat, zodat de aanroepende template
+ * de sectie netjes kan verbergen.
+ *
+ * @param string $slug  Slug van de productcategorie.
+ * @param int    $limit Maximaal aantal producten.
+ * @return array<int, WC_Product>
+ */
+function dkg_category_products( $slug, $limit = 4 ) {
+	if ( ! class_exists( 'WooCommerce' ) || ! $slug || ! taxonomy_exists( 'product_cat' ) ) {
+		return array();
+	}
+
+	if ( ! get_term_by( 'slug', $slug, 'product_cat' ) ) {
+		return array();
+	}
+
+	$products = wc_get_products(
+		array(
+			'status'   => 'publish',
+			'limit'    => max( 1, (int) $limit ),
+			'category' => array( $slug ),
+			'orderby'  => 'popularity',
+			'order'    => 'DESC',
+		)
+	);
+
+	return is_array( $products ) ? $products : array();
+}
+
+/**
+ * Bouw collectie-kaarten uit de echte subcategorieën van een term.
+ *
+ * Hiermee koppelt de landingspagina zich automatisch aan de WooCommerce
+ * categoriestructuur: subcategorieën worden als nette kaarten getoond,
+ * met hun eigen afbeelding (indien ingesteld) of een passend themabeeld.
+ *
+ * @param int $parent_id Term-ID van de hoofdcategorie.
+ * @param int $limit     Maximaal aantal kaarten.
+ * @return array<int, array<string, string>>
+ */
+function dkg_category_collection_cards( $parent_id, $limit = 8 ) {
+	if ( ! class_exists( 'WooCommerce' ) || ! taxonomy_exists( 'product_cat' ) || ! $parent_id ) {
+		return array();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => (int) $parent_id,
+			'hide_empty' => false,
+			'number'     => max( 1, (int) $limit ),
+			'orderby'    => 'name',
+		)
+	);
+
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return array();
+	}
+
+	$fallbacks = array( 'product-boeren.jpg', 'product-jonge.jpg', 'product-geiten.jpg', 'product-oude.jpg', 'product-truffel.jpg', 'product-extra.jpg' );
+	$cards     = array();
+	$i         = 0;
+
+	foreach ( $terms as $term ) {
+		$image_url = '';
+		$thumb_id  = get_term_meta( $term->term_id, 'thumbnail_id', true );
+
+		if ( $thumb_id ) {
+			$image_url = wp_get_attachment_image_url( $thumb_id, 'medium_large' );
+		}
+
+		$text = $term->description ? wp_trim_words( wp_strip_all_tags( $term->description ), 14 ) : '';
+
+		if ( ! $text ) {
+			$text = $term->count > 0
+				/* translators: %d aantal producten. */
+				? sprintf( _n( '%d product', '%d producten', $term->count, 'de-kaasgenoten' ), $term->count )
+				: __( 'Bekijk deze collectie', 'de-kaasgenoten' );
+		}
+
+		$link = get_term_link( $term );
+
+		$cards[] = array(
+			'title'     => $term->name,
+			'text'      => $text,
+			'image_url' => $image_url ? $image_url : '',
+			'image'     => $fallbacks[ $i % count( $fallbacks ) ],
+			'url'       => is_wp_error( $link ) ? dkg_shop_url() : $link,
+		);
+
+		$i++;
+	}
+
+	return $cards;
 }
 
 function dkg_product_archive_filter_terms() {
@@ -168,5 +271,7 @@ function dkg_product_excerpt( $product ) {
 	return wp_trim_words( wp_strip_all_tags( $text ), 16 );
 }
 
-remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
-remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+if ( class_exists( 'WooCommerce' ) ) {
+	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+	remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+}

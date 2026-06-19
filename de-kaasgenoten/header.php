@@ -51,7 +51,7 @@
 				'menu_id'        => 'primary-menu',
 				'menu_class'     => 'dkg-menu',
 				'container'      => false,
-				'fallback_cb'    => 'dkg_menu_fallback',
+				'fallback_cb'    => false,
 			) );
 			?>
 		</nav>

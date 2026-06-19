@@ -1,0 +1,10 @@
+# Build-artefacten (gegenereerde theme-zips)
+*.zip
+
+# Tijdelijke patch-/hulpbestanden
+.menu-patch-files/
+
+# OS-bestanden
+Thumbs.db
+desktop.ini
+.DS_Store
