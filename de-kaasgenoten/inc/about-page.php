@@ -20,8 +20,8 @@ function dkg_about_page_content() {
 	return array(
 		'hero'    => array(
 			'eyebrow'   => __( 'Over De Kaasgenoten', 'de-kaasgenoten' ),
-			'title'     => __( 'Drie ondernemers. Eén passie voor kwaliteitskaas.', 'de-kaasgenoten' ),
-			'text'      => __( 'Wij bundelen onze krachten om u de allerbeste kazen en delicatessen te bieden. Met liefde geselecteerd, met passie samengesteld — rechtstreeks van boer tot bord.', 'de-kaasgenoten' ),
+			'title'     => __( 'Drie ondernemers. Eén passie voor kaas — vanaf de marktkraam.', 'de-kaasgenoten' ),
+			'text'      => __( 'Wij verkopen ambachtelijke kazen en delicatessen op de marktkraam én online. Met liefde geselecteerd, met passie samengesteld — rechtstreeks van boer tot bord.', 'de-kaasgenoten' ),
 			'cta_label' => __( 'Bekijk ons assortiment', 'de-kaasgenoten' ),
 			'cta_url'   => dkg_shop_url(),
 			'image'     => 'hero-clean.jpg',
@@ -51,8 +51,8 @@ function dkg_about_page_content() {
 		),
 		'mission' => array(
 			'eyebrow'   => __( 'Onze missie', 'de-kaasgenoten' ),
-			'title'     => __( 'Meer dan een webshop', 'de-kaasgenoten' ),
-			'text'      => __( 'De Kaasgenoten is ontstaan uit de samenwerking van drie ondernemers met een gedeelde liefde voor ambachtelijke kaas. Wij geloven dat goede kaas een verhaal vertelt — van de weilanden tot uw bord.', 'de-kaasgenoten' ),
+			'title'     => __( 'Van marktkraam naar uw deur', 'de-kaasgenoten' ),
+			'text'      => __( 'De Kaasgenoten is ontstaan op de marktkraam: persoonlijk contact, eerlijk advies en kaas waar wij zelf achter staan. Diezelfde selectie en zorgvuldigheid gelden voor elke online bestelling.', 'de-kaasgenoten' ),
 			'cta_label' => __( 'Lees verder', 'de-kaasgenoten' ),
 			'cta_url'   => dkg_page_url( 'over-ons' ),
 			'image'     => 'about-founders.jpg',
@@ -72,12 +72,12 @@ function dkg_about_page_content() {
 				array(
 					'icon'  => 'hand',
 					'title' => __( 'Ambacht', 'de-kaasgenoten' ),
-					'text'  => __( 'Met de hand geselecteerd door onze experts.', 'de-kaasgenoten' ),
+					'text'  => __( 'Met de hand geselecteerd — op de marktkraam en voor uw bestelling.', 'de-kaasgenoten' ),
 				),
 				array(
 					'icon'  => 'knife',
 					'title' => __( 'Vers afgesneden', 'de-kaasgenoten' ),
-					'text'  => __( 'Op bestelling vers van het mes.', 'de-kaasgenoten' ),
+					'text'  => __( 'Vers afgesneden op bestelling, zoals op onze marktkraam.', 'de-kaasgenoten' ),
 				),
 				array(
 					'icon'  => 'service',
@@ -113,8 +113,8 @@ function dkg_about_page_content() {
 		'trust'   => array(
 			array(
 				'icon'  => 'truck',
-				'title' => __( 'Snelle verzending', 'de-kaasgenoten' ),
-				'text'  => __( 'Binnen 1-2 werkdagen in huis', 'de-kaasgenoten' ),
+				'title' => __( 'Zorgvuldig verzonden', 'de-kaasgenoten' ),
+				'text'  => __( 'Zo snel mogelijk, met zorg verwerkt', 'de-kaasgenoten' ),
 			),
 			array(
 				'icon'  => 'shield',
@@ -124,7 +124,7 @@ function dkg_about_page_content() {
 			array(
 				'icon'  => 'knife',
 				'title' => __( 'Vers afgesneden', 'de-kaasgenoten' ),
-				'text'  => __( 'Op bestelling vers van het mes', 'de-kaasgenoten' ),
+				'text'  => __( 'Vers afgesneden op bestelling', 'de-kaasgenoten' ),
 			),
 			array(
 				'icon'  => 'star',

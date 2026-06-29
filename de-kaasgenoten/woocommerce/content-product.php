@@ -40,7 +40,7 @@ $classes    = implode(
 			<?php if ( $product->get_average_rating() ) : ?>
 				<?php echo wc_get_rating_html( $product->get_average_rating() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php else : ?>
-				<span class="dkg-star-placeholder" aria-hidden="true">★★★★★</span>
+				<span class="dkg-no-reviews"><?php esc_html_e( 'Nog geen reviews', 'de-kaasgenoten' ); ?></span>
 			<?php endif; ?>
 			<span class="dkg-shop-card-price"><?php echo wp_kses_post( $product->get_price_html() ); ?></span>
 		</div>

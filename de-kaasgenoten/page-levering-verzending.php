@@ -7,4 +7,5 @@
  * @package De_Kaasgenoten
  */
 
-dkg_render_legal_page( 'levering-verzending' );
+wp_safe_redirect( dkg_shipping_page_url(), 301 );
+exit;

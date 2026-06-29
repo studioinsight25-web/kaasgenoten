@@ -58,6 +58,9 @@ function dkg_product_card_from_product( $product ) {
 	?>
 	<article class="dkg-product-card">
 		<a class="dkg-product-image" href="<?php echo esc_url( get_permalink( $product_id ) ); ?>">
+			<?php if ( $product->is_on_sale() ) : ?>
+				<span class="dkg-sale-badge"><?php esc_html_e( 'Aanbieding', 'de-kaasgenoten' ); ?></span>
+			<?php endif; ?>
 			<?php echo $product->get_image( 'woocommerce_thumbnail' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</a>
 		<div class="dkg-product-body">
@@ -150,7 +153,236 @@ function dkg_category_products( $slug, $limit = 4 ) {
 		)
 	);
 
-	return is_array( $products ) ? $products : array();
+	return is_array( $products ) ? dkg_sort_products_by_age( $products ) : array();
+}
+
+/**
+ * Vaste volgorde voor kaasrijpheid (jong → oud, daarna kruiden).
+ *
+ * @return array<string, int>
+ */
+function dkg_cheese_age_rank_map() {
+	return apply_filters(
+		'dkg_cheese_age_rank_map',
+		array(
+			'jong'          => 10,
+			'jong-belegen'  => 20,
+			'belegen'       => 30,
+			'extra-belegen' => 40,
+			'oud'           => 50,
+			'overjarig'     => 55,
+		)
+	);
+}
+
+/**
+ * Bepaal of een product een kruidenkaas is.
+ *
+ * @param WC_Product $product Product.
+ * @return bool
+ */
+function dkg_product_is_kruiden_cheese( $product ) {
+	if ( ! $product instanceof WC_Product ) {
+		return false;
+	}
+
+	$slugs = wp_get_post_terms( $product->get_id(), 'product_cat', array( 'fields' => 'slugs' ) );
+
+	if ( ! is_wp_error( $slugs ) && ! empty( $slugs ) ) {
+		if ( in_array( 'kruidenkaas', $slugs, true ) || in_array( 'kruiden', $slugs, true ) ) {
+			return true;
+		}
+	}
+
+	$name = strtolower( $product->get_name() );
+
+	return ( false !== strpos( $name, 'kruiden' ) ) || ( false !== strpos( $name, 'kruid' ) );
+}
+
+/**
+ * Rijpheidsrang voor sortering (lager = eerder in de lijst).
+ *
+ * @param WC_Product $product Product.
+ * @return int
+ */
+function dkg_product_age_rank( $product ) {
+	if ( ! $product instanceof WC_Product ) {
+		return 60;
+	}
+
+	$ranks      = dkg_cheese_age_rank_map();
+	$checkorder = array( 'extra-belegen', 'jong-belegen', 'jong', 'belegen', 'oud', 'overjarig' );
+	$slugs      = wp_get_post_terms( $product->get_id(), 'product_cat', array( 'fields' => 'slugs' ) );
+
+	if ( ! is_wp_error( $slugs ) && ! empty( $slugs ) ) {
+		foreach ( $checkorder as $slug ) {
+			if ( in_array( $slug, $slugs, true ) && isset( $ranks[ $slug ] ) ) {
+				return (int) $ranks[ $slug ];
+			}
+		}
+	}
+
+	$name = strtolower( $product->get_name() );
+
+	if ( false !== strpos( $name, 'extra belegen' ) ) {
+		return 40;
+	}
+
+	if ( false !== strpos( $name, 'jong belegen' ) ) {
+		return 20;
+	}
+
+	if ( preg_match( '/\bjong\b/u', $name ) ) {
+		return 10;
+	}
+
+	if ( false !== strpos( $name, 'belegen' ) ) {
+		return 30;
+	}
+
+	if ( false !== strpos( $name, 'overjarig' ) ) {
+		return 55;
+	}
+
+	if ( preg_match( '/\boud\b/u', $name ) ) {
+		return 50;
+	}
+
+	return 60;
+}
+
+/**
+ * Sorteerscore: eerst jong→oud, daarna kruiden (ook binnen kruiden jong→oud).
+ *
+ * @param WC_Product $product Product.
+ * @return int
+ */
+function dkg_product_sort_score( $product ) {
+	$age = dkg_product_age_rank( $product );
+
+	if ( dkg_product_is_kruiden_cheese( $product ) ) {
+		return 1000 + $age;
+	}
+
+	return $age;
+}
+
+/**
+ * Sorteer producten op vaste kaasvolgorde.
+ *
+ * @param array<int, WC_Product> $products Producten.
+ * @return array<int, WC_Product>
+ */
+function dkg_sort_products_by_age( $products ) {
+	if ( empty( $products ) || ! is_array( $products ) ) {
+		return $products;
+	}
+
+	usort(
+		$products,
+		function ( $a, $b ) {
+			$score_a = dkg_product_sort_score( $a );
+			$score_b = dkg_product_sort_score( $b );
+
+			if ( $score_a !== $score_b ) {
+				return $score_a <=> $score_b;
+			}
+
+			return strcasecmp( $a->get_name(), $b->get_name() );
+		}
+	);
+
+	return $products;
+}
+
+/**
+ * Sorteer productarchieven in de hoofdquery op jong → oud → kruiden.
+ *
+ * @param array<int, WP_Post> $posts Posts.
+ * @param WP_Query            $query Query.
+ * @return array<int, WP_Post>
+ */
+function dkg_sort_product_archive_posts( $posts, $query ) {
+	if ( is_admin() || ! $query->is_main_query() || empty( $posts ) || 'product' !== $query->get( 'post_type' ) ) {
+		return $posts;
+	}
+
+	if ( ! $query->is_post_type_archive( 'product' ) && ! $query->is_tax( array( 'product_cat', 'product_tag' ) ) ) {
+		return $posts;
+	}
+
+	if ( function_exists( 'dkg_brand_page_term_from_query' ) ) {
+		$term = dkg_brand_page_term_from_query( $query );
+
+		if ( $term instanceof WP_Term && function_exists( 'dkg_get_brand_page' ) && dkg_get_brand_page( $term->slug ) ) {
+			return $posts;
+		}
+	}
+
+	// Respecteer handmatige sortering via WooCommerce dropdown.
+	$orderby = $query->get( 'orderby' );
+
+	if ( $orderby && 'menu_order' !== $orderby && 'menu_order title' !== $orderby ) {
+		return $posts;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( ! empty( $_GET['orderby'] ) ) {
+		return $posts;
+	}
+
+	usort(
+		$posts,
+		function ( $a, $b ) {
+			$product_a = wc_get_product( $a->ID );
+			$product_b = wc_get_product( $b->ID );
+			$score_a   = dkg_product_sort_score( $product_a );
+			$score_b   = dkg_product_sort_score( $product_b );
+
+			if ( $score_a !== $score_b ) {
+				return $score_a <=> $score_b;
+			}
+
+			return strcasecmp( $a->post_title, $b->post_title );
+		}
+	);
+
+	return $posts;
+}
+
+/**
+ * Vaste merklogo's voor categoriekaarten (slug => bestand onder assets/images/).
+ *
+ * @return array<string, string>
+ */
+function dkg_brand_category_images() {
+	return apply_filters(
+		'dkg_brand_category_images',
+		array(
+			'bastiaansen'         => 'brands/brand-bastiaansen.png',
+			'marienwaerdt'        => 'brands/brand-marienwaerdt.png',
+			'mekkerstee'          => 'brands/brand-mekkerstee.png',
+			'terschellinger'      => 'brands/brand-terschellinger.png',
+			'terschellinger-kaas' => 'brands/brand-terschellinger.png',
+		)
+	);
+}
+
+/**
+ * Merklogo-URL voor een productcategorie-slug.
+ *
+ * @param string $slug Categorie-slug.
+ * @return string
+ */
+function dkg_get_brand_category_image( $slug ) {
+	$slug   = sanitize_title( (string) $slug );
+	$images = dkg_brand_category_images();
+
+	if ( empty( $images[ $slug ] ) ) {
+		return '';
+	}
+
+	return dkg_asset_uri( 'images/' . ltrim( $images[ $slug ], '/' ) );
 }
 
 /**
@@ -188,11 +420,19 @@ function dkg_category_collection_cards( $parent_id, $limit = 8 ) {
 	$i         = 0;
 
 	foreach ( $terms as $term ) {
-		$image_url = '';
-		$thumb_id  = get_term_meta( $term->term_id, 'thumbnail_id', true );
+		$image_url    = '';
+		$is_brand_logo = false;
+		$brand_image  = dkg_get_brand_category_image( $term->slug );
 
-		if ( $thumb_id ) {
-			$image_url = wp_get_attachment_image_url( $thumb_id, 'medium_large' );
+		if ( $brand_image ) {
+			$image_url     = $brand_image;
+			$is_brand_logo = true;
+		} else {
+			$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
+
+			if ( $thumb_id ) {
+				$image_url = wp_get_attachment_image_url( $thumb_id, 'medium_large' );
+			}
 		}
 
 		$text = $term->description ? wp_trim_words( wp_strip_all_tags( $term->description ), 14 ) : '';
@@ -207,11 +447,12 @@ function dkg_category_collection_cards( $parent_id, $limit = 8 ) {
 		$link = get_term_link( $term );
 
 		$cards[] = array(
-			'title'     => $term->name,
-			'text'      => $text,
-			'image_url' => $image_url ? $image_url : '',
-			'image'     => $fallbacks[ $i % count( $fallbacks ) ],
-			'url'       => is_wp_error( $link ) ? dkg_shop_url() : $link,
+			'title'         => $term->name,
+			'text'          => $text,
+			'image_url'     => $image_url ? $image_url : '',
+			'image'         => $fallbacks[ $i % count( $fallbacks ) ],
+			'is_brand_logo' => $is_brand_logo,
+			'url'           => is_wp_error( $link ) ? dkg_shop_url() : $link,
 		);
 
 		$i++;
@@ -274,4 +515,5 @@ function dkg_product_excerpt( $product ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
 	remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
+	add_filter( 'the_posts', 'dkg_sort_product_archive_posts', 20, 2 );
 }

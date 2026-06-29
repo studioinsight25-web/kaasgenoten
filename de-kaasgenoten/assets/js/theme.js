@@ -132,3 +132,113 @@
 		banner.classList.remove('is-visible');
 	});
 })();
+
+(function () {
+	var openButtons = document.querySelectorAll('[data-dkg-mini-cart-open]');
+	var miniCart = document.getElementById('dkg-mini-cart');
+
+	if (!miniCart || !openButtons.length) {
+		return;
+	}
+
+	function openMiniCart() {
+		miniCart.removeAttribute('hidden');
+		document.body.classList.add('dkg-mini-cart-open');
+	}
+
+	function closeMiniCart() {
+		miniCart.setAttribute('hidden', '');
+		document.body.classList.remove('dkg-mini-cart-open');
+	}
+
+	openButtons.forEach(function (button) {
+		button.addEventListener('click', function (event) {
+			event.preventDefault();
+			openMiniCart();
+		});
+	});
+
+	miniCart.addEventListener('click', function (event) {
+		if (event.target.closest('[data-dkg-mini-cart-close]')) {
+			closeMiniCart();
+		}
+	});
+
+	document.addEventListener('keydown', function (event) {
+		if ('Escape' === event.key && document.body.classList.contains('dkg-mini-cart-open')) {
+			closeMiniCart();
+		}
+	});
+})();
+
+(function () {
+	var stickyBar = document.getElementById('dkg-sticky-atc');
+	var summary = document.getElementById('product-add-to-cart');
+
+	if (!stickyBar || !summary) {
+		return;
+	}
+
+	function updateStickyBar() {
+		var rect = summary.getBoundingClientRect();
+		var shouldShow = rect.bottom < 0;
+
+		if (shouldShow) {
+			stickyBar.removeAttribute('hidden');
+		} else {
+			stickyBar.setAttribute('hidden', '');
+		}
+	}
+
+	window.addEventListener('scroll', updateStickyBar, { passive: true });
+	window.addEventListener('resize', updateStickyBar);
+	updateStickyBar();
+})();
+
+(function () {
+	var list = document.querySelector('.dkg-faq-list');
+
+	if (!list) {
+		return;
+	}
+
+	var items = list.querySelectorAll('.dkg-faq-item');
+
+	items.forEach(function (item) {
+		var button = item.querySelector('.dkg-faq-question');
+		var panel = item.querySelector('.dkg-faq-answer');
+
+		if (!button || !panel) {
+			return;
+		}
+
+		function setOpen(open) {
+			item.classList.toggle('is-open', open);
+			button.setAttribute('aria-expanded', String(open));
+			panel.hidden = !open;
+		}
+
+		button.addEventListener('click', function () {
+			var willOpen = !item.classList.contains('is-open');
+
+			items.forEach(function (other) {
+				if (other === item) {
+					return;
+				}
+
+				var otherButton = other.querySelector('.dkg-faq-question');
+				var otherPanel = other.querySelector('.dkg-faq-answer');
+
+				if (!otherButton || !otherPanel) {
+					return;
+				}
+
+				other.classList.remove('is-open');
+				otherButton.setAttribute('aria-expanded', 'false');
+				otherPanel.hidden = true;
+			});
+
+			setOpen(willOpen);
+		});
+	});
+})();

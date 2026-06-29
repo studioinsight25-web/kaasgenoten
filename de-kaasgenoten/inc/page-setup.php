@@ -34,6 +34,14 @@ function dkg_required_pages() {
 			'title'    => __( 'Veelgestelde vragen', 'de-kaasgenoten' ),
 			'template' => 'page-veelgestelde-vragen.php',
 		),
+		'kwaliteitsbelofte'                   => array(
+			'title'    => __( 'Onze kwaliteitsbelofte', 'de-kaasgenoten' ),
+			'template' => 'page-kwaliteitsbelofte.php',
+		),
+		'verzenden-bezorgen'                  => array(
+			'title'    => __( 'Verzenden & bezorgen', 'de-kaasgenoten' ),
+			'template' => 'page-verzenden-bezorgen.php',
+		),
 		'levering-verzending'                 => array(
 			'title'    => __( 'Levering & verzending', 'de-kaasgenoten' ),
 			'template' => 'page-levering-verzending.php',

@@ -9,10 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DKG_VERSION', '1.4.3' );
+define( 'DKG_VERSION', '2.3.5' );
 
 function dkg_asset_uri( $path = '' ) {
-	return esc_url( get_template_directory_uri() . '/assets/' . ltrim( $path, '/' ) );
+	$path = ltrim( (string) $path, '/' );
+	$uri  = get_template_directory_uri() . '/assets/' . $path;
+	$file = get_template_directory() . '/assets/' . $path;
+
+	if ( is_readable( $file ) ) {
+		$uri = add_query_arg( 'ver', (string) filemtime( $file ), $uri );
+	} else {
+		$uri = add_query_arg( 'ver', DKG_VERSION, $uri );
+	}
+
+	return esc_url( $uri );
 }
 
 function dkg_page_url( $path ) {
@@ -58,6 +68,18 @@ add_action( 'after_switch_theme', 'dkg_flush_rewrites_on_switch' );
 function dkg_maybe_flush_rewrites_after_update() {
 	if ( get_option( 'dkg_theme_version' ) === DKG_VERSION ) {
 		return;
+	}
+
+	if ( function_exists( 'dkg_wc_setup_on_activation' ) ) {
+		dkg_wc_setup_on_activation();
+	}
+
+	if ( function_exists( 'dkg_create_required_pages' ) ) {
+		dkg_create_required_pages();
+	}
+
+	if ( function_exists( 'dkg_setup_default_shipping_zone' ) ) {
+		dkg_setup_default_shipping_zone();
 	}
 
 	flush_rewrite_rules();
@@ -113,6 +135,59 @@ function dkg_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'dkg_enqueue_assets' );
 
+/**
+ * Toon themaversie in de adminbalk (alleen voor beheerders, frontend).
+ *
+ * @param WP_Admin_Bar $wp_admin_bar Admin bar instance.
+ */
+function dkg_admin_bar_theme_version( $wp_admin_bar ) {
+	if ( ! current_user_can( 'manage_options' ) || is_admin() ) {
+		return;
+	}
+
+	$wp_admin_bar->add_node(
+		array(
+			'id'    => 'dkg-theme-version',
+			'title' => 'DKG ' . DKG_VERSION,
+			'href'  => admin_url( 'themes.php' ),
+			'meta'  => array(
+				'title' => __( 'De Kaasgenoten themaversie — moet 2.0.2 zijn na upload', 'de-kaasgenoten' ),
+			),
+		)
+	);
+}
+add_action( 'admin_bar_menu', 'dkg_admin_bar_theme_version', 100 );
+
+/**
+ * Bevestiging na thema-activatie.
+ */
+function dkg_theme_activation_notice() {
+	$version = get_transient( 'dkg_theme_activated' );
+
+	if ( ! $version || ! current_user_can( 'switch_themes' ) ) {
+		return;
+	}
+
+	delete_transient( 'dkg_theme_activated' );
+
+	printf(
+		'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+		esc_html(
+			sprintf(
+				/* translators: %s: theme version */
+				__( 'De Kaasgenoten thema v%s is geactiveerd. Controleer de site met Ctrl+F5.', 'de-kaasgenoten' ),
+				$version
+			)
+		)
+	);
+}
+add_action( 'admin_notices', 'dkg_theme_activation_notice' );
+
+function dkg_theme_activation_transient() {
+	set_transient( 'dkg_theme_activated', DKG_VERSION, MINUTE_IN_SECONDS );
+}
+add_action( 'after_switch_theme', 'dkg_theme_activation_transient' );
+
 function dkg_icon( $name ) {
 	$icons = array(
 		'search' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.2-4.2"></path></svg>',
@@ -135,6 +210,8 @@ function dkg_icon( $name ) {
 		'phone'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h3l2 5-2.5 1.5a11 11 0 0 0 5 5L21 13l-1 5a2 2 0 0 1-2 1.6A15 15 0 0 1 4.4 6 2 2 0 0 1 6 3Z"></path></svg>',
 		'mail'   => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="m3 7 9 6 9-6"></path></svg>',
 		'clock'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7v5l3.5 2"></path></svg>',
+		'calendar' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path></svg>',
+		'tag'    => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11V5a2 2 0 0 1 2-2h6l9 9-7 7-9-9Z"></path><circle cx="7.5" cy="7.5" r="1.2"></circle></svg>',
 		'facebook'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5h2.5V5.5H14c-2 0-3.3 1.4-3.3 3.4v1.6H8.5v3h2.2V21h3v-7.5h2.3l.5-3h-2.8V9.2c0-.5.3-.7.8-.7Z"></path></svg>',
 		'instagram' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="16.6" cy="7.4" r="1"></circle></svg>',
 		'pinterest' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5c-2.2 0-3.7 1.5-3.7 3.4 0 1 .5 2 1.4 2.3.2.1.3 0 .3-.2l.1-.6c0-.2 0-.3-.1-.4-.3-.3-.4-.7-.4-1.2 0-1.4 1.1-2.5 2.7-2.5 1.5 0 2.3.9 2.3 2.1 0 1.6-.7 2.9-1.7 2.9-.6 0-1-.5-.9-1.1.2-.7.5-1.4.5-1.9 0-.4-.2-.8-.7-.8-.6 0-1 .6-1 1.4 0 .5.2.8.2.8L10.5 17c-.2 1 0 2.1 0 2.2l.1.1.1-.1c.2-.2.8-1.2 1-2l.4-1.4c.3.5.9.8 1.6.8 2 0 3.5-1.9 3.5-4.4 0-1.9-1.6-3.7-4.2-3.7Z"></path></svg>',
@@ -162,13 +239,26 @@ function dkg_trust_rating() {
 	);
 }
 
+require get_template_directory() . '/inc/theme-options.php';
+require get_template_directory() . '/inc/nav.php';
+require get_template_directory() . '/inc/wc-setup.php';
 require get_template_directory() . '/inc/woocommerce.php';
+require get_template_directory() . '/inc/aanbieding-page.php';
+require get_template_directory() . '/inc/brand-pages.php';
 require get_template_directory() . '/inc/luxe-pages.php';
 require get_template_directory() . '/inc/about-page.php';
 require get_template_directory() . '/inc/contact-page.php';
 require get_template_directory() . '/inc/legal-pages.php';
+require get_template_directory() . '/inc/shipping-page.php';
+require get_template_directory() . '/inc/shipping-setup.php';
+require get_template_directory() . '/inc/quality-promise-page.php';
 require get_template_directory() . '/inc/page-setup.php';
+require get_template_directory() . '/inc/search.php';
+require get_template_directory() . '/inc/seo.php';
+require get_template_directory() . '/inc/performance.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/variation-order.php';
+	require get_template_directory() . '/inc/single-product.php';
+	require get_template_directory() . '/inc/cart-checkout.php';
 }

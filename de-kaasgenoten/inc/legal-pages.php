@@ -180,7 +180,11 @@ function dkg_legal_page_data( $key ) {
 				array(
 					'id'    => 'levering',
 					'title' => __( '7. Levering en uitvoering', 'de-kaasgenoten' ),
-					'body'  => '<p>' . __( 'De ondernemer zal de grootst mogelijke zorgvuldigheid in acht nemen bij de uitvoering van bestellingen. Zie onze pagina Levering & verzending voor levertijden en kosten.', 'de-kaasgenoten' ) . '</p>',
+					'body'  => '<p>' . sprintf(
+						/* translators: %s: link naar verzendpagina */
+						__( 'De ondernemer zal de grootst mogelijke zorgvuldigheid in acht nemen bij de uitvoering van bestellingen. Zie onze pagina %s voor informatie over verzending, verpakking en afhalen op afspraak.', 'de-kaasgenoten' ),
+						'<a href="' . esc_url( dkg_shipping_page_url() ) . '">' . esc_html__( 'Verzenden & bezorgen', 'de-kaasgenoten' ) . '</a>'
+					) . '</p>',
 				),
 				array(
 					'id'    => 'klachten',
@@ -233,30 +237,19 @@ function dkg_legal_page_data( $key ) {
 		),
 		'levering-verzending' => array(
 			'eyebrow' => __( 'Klantenservice', 'de-kaasgenoten' ),
-			'title'   => __( 'Levering & verzending', 'de-kaasgenoten' ),
-			'intro'   => __( 'Alles over onze bezorging: levertijden, kosten en verzendgebied.', 'de-kaasgenoten' ),
+			'title'   => __( 'Verzenden & bezorgen', 'de-kaasgenoten' ),
+			'intro'   => __( 'Deze pagina is verplaatst. U vindt alle informatie over verzending, verpakking en afhalen op afspraak op onze nieuwe verzendpagina.', 'de-kaasgenoten' ),
 			'updated' => $updated,
 			'layout'  => 'document',
 			'sections' => array(
 				array(
-					'id'    => 'levertijd',
-					'title' => __( '1. Levertijd', 'de-kaasgenoten' ),
-					'body'  => '<p>' . __( 'Bestellingen die op werkdagen voor 15:00 uur worden geplaatst, versturen wij doorgaans dezelfde dag. De bezorging vindt plaats binnen 1 tot 2 werkdagen.', 'de-kaasgenoten' ) . '</p>',
-				),
-				array(
-					'id'    => 'verzendkosten',
-					'title' => __( '2. Verzendkosten', 'de-kaasgenoten' ),
-					'body'  => '<p>' . __( 'De verzendkosten worden bij het afrekenen getoond. Bij bestellingen vanaf €75 verzenden wij gratis binnen Nederland.', 'de-kaasgenoten' ) . '</p>',
-				),
-				array(
-					'id'    => 'verzendgebied',
-					'title' => __( '3. Verzendgebied', 'de-kaasgenoten' ),
-					'body'  => '<p>' . __( 'Wij bezorgen binnen Nederland en België. Voor verzending naar andere landen kunt u contact met ons opnemen.', 'de-kaasgenoten' ) . '</p>',
-				),
-				array(
-					'id'    => 'gekoeld',
-					'title' => __( '4. Gekoeld verzonden', 'de-kaasgenoten' ),
-					'body'  => '<p>' . __( 'Onze kazen worden vers gesneden en zorgvuldig gekoeld verpakt, zodat ze in optimale conditie bij u aankomen.', 'de-kaasgenoten' ) . '</p>',
+					'id'    => 'verplaatst',
+					'title' => __( '1. Nieuwe verzendpagina', 'de-kaasgenoten' ),
+					'body'  => '<p>' . sprintf(
+						/* translators: %s: link */
+						__( 'Bekijk %s voor actuele informatie over verzendkosten, verwerking, Track & Trace en afhalen op onze locatie in Opmeer.', 'de-kaasgenoten' ),
+						'<a href="' . esc_url( dkg_shipping_page_url() ) . '">' . esc_html__( 'Verzenden & bezorgen', 'de-kaasgenoten' ) . '</a>'
+					) . '</p>',
 				),
 			),
 		),
@@ -329,11 +322,15 @@ function dkg_faq_items() {
 	return array(
 		array(
 			'q' => __( 'Hoe snel wordt mijn bestelling geleverd?', 'de-kaasgenoten' ),
-			'a' => __( 'Bestel je op een werkdag voor 15:00 uur, dan versturen wij je bestelling meestal dezelfde dag. De bezorging duurt 1 tot 2 werkdagen.', 'de-kaasgenoten' ),
+			'a' => __( 'Wij verwerken bestellingen van maandag t/m vrijdag en verzenden zo snel mogelijk zodra uw bestelling zorgvuldig en compleet klaar is. U ontvangt bericht zodra uw pakket is verzonden.', 'de-kaasgenoten' ),
 		),
 		array(
-			'q' => __( 'Worden de kazen gekoeld verzonden?', 'de-kaasgenoten' ),
-			'a' => __( 'Ja, onze kazen worden vers gesneden en zorgvuldig gekoeld verpakt, zodat ze in optimale conditie bij je aankomen.', 'de-kaasgenoten' ),
+			'q' => __( 'Worden de kazen zorgvuldig verpakt?', 'de-kaasgenoten' ),
+			'a' => __( 'Ja. Onze kazen worden vers afgesneden, vacuüm verpakt en in een stevige doos verzonden. Lees meer op onze pagina Verzenden & bezorgen.', 'de-kaasgenoten' ),
+		),
+		array(
+			'q' => __( 'Kan ik mijn bestelling afhalen?', 'de-kaasgenoten' ),
+			'a' => __( 'Ja. Kies bij het afrekenen voor “Afhalen op afspraak”. Na uw bestelling nemen wij contact met u op om een geschikt moment af te spreken op onze locatie in Opmeer.', 'de-kaasgenoten' ),
 		),
 		array(
 			'q' => __( 'Kan ik mijn bestelling retourneren?', 'de-kaasgenoten' ),
@@ -344,8 +341,8 @@ function dkg_faq_items() {
 			'a' => __( 'Je kunt veilig betalen met iDEAL, creditcard, Bancontact en andere gangbare betaalmethoden.', 'de-kaasgenoten' ),
 		),
 		array(
-			'q' => __( 'Vanaf welk bedrag is de verzending gratis?', 'de-kaasgenoten' ),
-			'a' => __( 'Bij bestellingen vanaf €75 verzenden wij gratis binnen Nederland.', 'de-kaasgenoten' ),
+			'q' => __( 'Wat zijn de verzendkosten?', 'de-kaasgenoten' ),
+			'a' => __( 'Binnen Nederland rekenen wij €7,95 verzendkosten per bestelling. Afhalen op afspraak op onze locatie in Opmeer is gratis.', 'de-kaasgenoten' ),
 		),
 		array(
 			'q' => __( 'Kan ik een pakket op maat samenstellen?', 'de-kaasgenoten' ),
@@ -447,10 +444,28 @@ function dkg_render_faq_page() {
 			<div class="dkg-container dkg-faq-wrap">
 				<div class="dkg-faq-list">
 					<?php foreach ( $items as $index => $item ) : ?>
-						<details class="dkg-faq-item"<?php echo 0 === $index ? ' open' : ''; ?>>
-							<summary class="dkg-faq-question"><?php echo esc_html( $item['q'] ); ?></summary>
-							<div class="dkg-faq-answer"><p><?php echo esc_html( $item['a'] ); ?></p></div>
-						</details>
+						<article class="dkg-faq-item<?php echo 0 === $index ? ' is-open' : ''; ?>">
+							<h2 class="dkg-faq-item__heading">
+								<button
+									type="button"
+									class="dkg-faq-question"
+									id="<?php echo esc_attr( 'dkg-faq-q-' . $index ); ?>"
+									aria-controls="<?php echo esc_attr( 'dkg-faq-a-' . $index ); ?>"
+									aria-expanded="<?php echo 0 === $index ? 'true' : 'false'; ?>"
+								>
+									<?php echo esc_html( $item['q'] ); ?>
+								</button>
+							</h2>
+							<div
+								class="dkg-faq-answer"
+								id="<?php echo esc_attr( 'dkg-faq-a-' . $index ); ?>"
+								role="region"
+								aria-labelledby="<?php echo esc_attr( 'dkg-faq-q-' . $index ); ?>"
+								<?php echo 0 === $index ? '' : ' hidden'; ?>
+							>
+								<p><?php echo esc_html( $item['a'] ); ?></p>
+							</div>
+						</article>
 					<?php endforeach; ?>
 				</div>
 

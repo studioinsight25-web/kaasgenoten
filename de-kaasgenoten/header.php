@@ -17,9 +17,9 @@
 
 <div class="dkg-topbar">
 	<div class="dkg-container dkg-topbar-inner">
-		<span><?php echo dkg_icon( 'heart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Vers van het mes, met liefde geselecteerd', 'de-kaasgenoten' ); ?></span>
-		<span><?php echo dkg_icon( 'truck' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Gratis verzending vanaf €75', 'de-kaasgenoten' ); ?></span>
-		<span><?php echo dkg_icon( 'truck' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Voor 15:00 besteld, morgen in huis', 'de-kaasgenoten' ); ?></span>
+		<?php foreach ( dkg_topbar_messages() as $index => $message ) : ?>
+			<span><?php echo 0 === $index ? dkg_icon( 'heart' ) : dkg_icon( 'truck' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $message ); ?></span>
+		<?php endforeach; ?>
 	</div>
 </div>
 
@@ -34,7 +34,7 @@
 				</span>
 				<span class="dkg-logo-text">
 					<strong><?php esc_html_e( 'De Kaasgenoten', 'de-kaasgenoten' ); ?></strong>
-					<small><?php esc_html_e( 'Ambachtelijke kaas', 'de-kaasgenoten' ); ?></small>
+					<small><?php esc_html_e( 'Marktkraam & webshop', 'de-kaasgenoten' ); ?></small>
 				</span>
 			<?php endif; ?>
 		</a>
@@ -44,25 +44,35 @@
 			<span class="screen-reader-text"><?php esc_html_e( 'Menu openen', 'de-kaasgenoten' ); ?></span>
 		</button>
 
-		<nav class="dkg-primary-nav" aria-label="<?php esc_attr_e( 'Hoofdmenu', 'de-kaasgenoten' ); ?>">
-			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'menu_id'        => 'primary-menu',
-				'menu_class'     => 'dkg-menu',
-				'container'      => false,
-				'fallback_cb'    => false,
-			) );
-			?>
-		</nav>
+		<div class="dkg-header-nav-wrap">
+			<nav class="dkg-primary-nav" aria-label="<?php esc_attr_e( 'Hoofdmenu', 'de-kaasgenoten' ); ?>">
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'primary',
+						'menu_id'        => 'primary-menu',
+						'menu_class'     => 'dkg-menu',
+						'container'      => false,
+						'fallback_cb'    => 'dkg_primary_menu_fallback',
+					)
+				);
+				?>
+			</nav>
+
+			<?php if ( function_exists( 'dkg_aanbieding_url' ) ) : ?>
+				<a class="dkg-nav-aanbieding<?php echo dkg_aanbieding_nav_is_active() ? ' is-active' : ''; ?>" href="<?php echo esc_url( dkg_aanbieding_url() ); ?>">
+					<?php esc_html_e( 'Aanbiedingen', 'de-kaasgenoten' ); ?>
+				</a>
+			<?php endif; ?>
+		</div>
 
 		<div class="dkg-header-actions">
-			<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" aria-label="<?php esc_attr_e( 'Zoeken', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+			<a href="<?php echo esc_url( function_exists( 'dkg_product_search_url' ) ? dkg_product_search_url() : home_url( '/?s=' ) ); ?>" aria-label="<?php esc_attr_e( 'Zoeken', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
 			<a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'myaccount' ) : dkg_page_url( 'mijn-account' ) ); ?>" aria-label="<?php esc_attr_e( 'Mijn account', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
-			<a class="dkg-cart-link" href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_cart_url() : dkg_page_url( 'winkelwagen' ) ); ?>" aria-label="<?php esc_attr_e( 'Winkelwagen', 'de-kaasgenoten' ); ?>">
+			<button type="button" class="dkg-cart-link" data-dkg-mini-cart-open aria-label="<?php esc_attr_e( 'Winkelwagen', 'de-kaasgenoten' ); ?>">
 				<?php echo dkg_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<span class="dkg-cart-count"><?php echo esc_html( dkg_cart_count() ); ?></span>
-			</a>
+			</button>
 		</div>
 	</div>
 </header>

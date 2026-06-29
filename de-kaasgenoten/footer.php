@@ -14,22 +14,27 @@
 				</span>
 				<span class="dkg-logo-text">
 					<strong><?php esc_html_e( 'De Kaasgenoten', 'de-kaasgenoten' ); ?></strong>
-					<small><?php esc_html_e( 'Ambachtelijke kaas', 'de-kaasgenoten' ); ?></small>
+					<small><?php esc_html_e( 'Marktkraam & webshop', 'de-kaasgenoten' ); ?></small>
 				</span>
 			</a>
 			<p><?php esc_html_e( 'De lekkerste kazen, delicatessen en cadeaupakketten. Met liefde geselecteerd, met passie samengesteld.', 'de-kaasgenoten' ); ?></p>
 			<div class="dkg-socials" aria-label="<?php esc_attr_e( 'Social media', 'de-kaasgenoten' ); ?>">
-				<a href="<?php echo esc_url( dkg_page_url( 'contact' ) ); ?>" aria-label="<?php esc_attr_e( 'Facebook informatie aanvragen', 'de-kaasgenoten' ); ?>">f</a>
-				<a href="<?php echo esc_url( dkg_page_url( 'contact' ) ); ?>" aria-label="<?php esc_attr_e( 'Instagram informatie aanvragen', 'de-kaasgenoten' ); ?>">◎</a>
-				<a href="tel:+31416123456" aria-label="<?php esc_attr_e( 'Bel De Kaasgenoten', 'de-kaasgenoten' ); ?>">w</a>
-				<a href="mailto:info@de-kaasgenoten.nl" aria-label="E-mail">✉</a>
+				<?php foreach ( dkg_social_links() as $social ) : ?>
+					<a href="<?php echo esc_url( $social['url'] ); ?>" aria-label="<?php echo esc_attr( $social['label'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo dkg_icon( $social['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+				<?php endforeach; ?>
+				<?php if ( empty( dkg_social_links() ) ) : ?>
+					<?php $dkg_company = dkg_company_details(); ?>
+					<a href="<?php echo esc_url( 'tel:' . $dkg_company['phone_href'] ); ?>" aria-label="<?php esc_attr_e( 'Bel De Kaasgenoten', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'phone' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+					<a href="<?php echo esc_url( 'mailto:' . $dkg_company['email'] ); ?>" aria-label="<?php esc_attr_e( 'E-mail', 'de-kaasgenoten' ); ?>"><?php echo dkg_icon( 'mail' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+				<?php endif; ?>
 			</div>
 		</div>
 		<div>
 			<h2><?php esc_html_e( 'Klantenservice', 'de-kaasgenoten' ); ?></h2>
 			<ul>
 				<li><a href="<?php echo esc_url( dkg_page_url( 'veelgestelde-vragen' ) ); ?>"><?php esc_html_e( 'Veelgestelde vragen', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'levering-verzending' ) ); ?>"><?php esc_html_e( 'Levering & verzending', 'de-kaasgenoten' ); ?></a></li>
+				<li><a href="<?php echo esc_url( dkg_quality_promise_page_url() ); ?>"><?php esc_html_e( 'Onze kwaliteitsbelofte', 'de-kaasgenoten' ); ?></a></li>
+				<li><a href="<?php echo esc_url( dkg_shipping_page_url() ); ?>"><?php esc_html_e( 'Verzenden & bezorgen', 'de-kaasgenoten' ); ?></a></li>
 				<li><a href="<?php echo esc_url( dkg_page_url( 'terugbetaal-en-retourneringsbeleid' ) ); ?>"><?php esc_html_e( 'Terugbetaal- en retourneringsbeleid', 'de-kaasgenoten' ); ?></a></li>
 				<li><a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_cart_url() : dkg_page_url( 'winkelwagen' ) ); ?>"><?php esc_html_e( 'Winkelwagen', 'de-kaasgenoten' ); ?></a></li>
 				<li><a href="<?php echo esc_url( dkg_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact', 'de-kaasgenoten' ); ?></a></li>
@@ -38,12 +43,9 @@
 		<div>
 			<h2><?php esc_html_e( 'Informatie', 'de-kaasgenoten' ); ?></h2>
 			<ul>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'kaas-delicatessen' ) ); ?>"><?php esc_html_e( 'Kaas & Delicatessen', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'borrelpakketten' ) ); ?>"><?php esc_html_e( 'Borrelpakketten', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'kerstpakketten' ) ); ?>"><?php esc_html_e( 'Kerstpakketten', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'relatiegeschenken' ) ); ?>"><?php esc_html_e( 'Relatiegeschenken', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'over-ons' ) ); ?>"><?php esc_html_e( 'Over ons', 'de-kaasgenoten' ); ?></a></li>
-				<li><a href="<?php echo esc_url( dkg_page_url( 'privacy-policy' ) ); ?>"><?php esc_html_e( 'Privacybeleid', 'de-kaasgenoten' ); ?></a></li>
+				<?php foreach ( dkg_footer_info_links() as $link ) : ?>
+					<li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
+				<?php endforeach; ?>
 			</ul>
 		</div>
 		<div>
@@ -83,7 +85,7 @@
 			<a href="<?php echo esc_url( dkg_page_url( 'terugbetaal-en-retourneringsbeleid' ) ); ?>"><?php esc_html_e( 'Retourbeleid', 'de-kaasgenoten' ); ?></a>
 			<a href="<?php echo esc_url( dkg_page_url( 'privacy-policy' ) ); ?>"><?php esc_html_e( 'Privacybeleid', 'de-kaasgenoten' ); ?></a>
 			<a href="<?php echo esc_url( dkg_page_url( 'cookiebeleid' ) ); ?>"><?php esc_html_e( 'Cookiebeleid', 'de-kaasgenoten' ); ?></a>
-			<a href="<?php echo esc_url( dkg_page_url( 'levering-verzending' ) ); ?>"><?php esc_html_e( 'Levering & verzending', 'de-kaasgenoten' ); ?></a>
+			<a href="<?php echo esc_url( dkg_shipping_page_url() ); ?>"><?php esc_html_e( 'Verzenden & bezorgen', 'de-kaasgenoten' ); ?></a>
 		</nav>
 	</div>
 </footer>
@@ -105,6 +107,11 @@
 		</div>
 	</div>
 </div>
+
+<?php
+// Themaversie voor controle na upload (bekijk paginabron).
+printf( "\n<!-- De Kaasgenoten theme %s -->\n", esc_html( DKG_VERSION ) );
+?>
 
 <?php wp_footer(); ?>
 </body>

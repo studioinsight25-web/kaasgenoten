@@ -1,0 +1,146 @@
+/**
+ * Cart, checkout & account
+ * De Kaasgenoten
+ */
+
+.dkg-cart-trust,
+.dkg-checkout-trust {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 20px;
+	margin-bottom: 24px;
+	padding: 16px 20px;
+	border-radius: 12px;
+	background: var(--dkg-cream);
+}
+
+.dkg-cart-trust span,
+.dkg-checkout-trust span {
+	font-size: .86rem;
+	font-weight: 800;
+	color: var(--dkg-dark);
+}
+
+.dkg-cart-page .dkg-cart-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.dkg-cart-page .dkg-cart-table th,
+.dkg-cart-page .dkg-cart-table td {
+	padding: 16px 12px;
+	border-bottom: 1px solid var(--dkg-border);
+	vertical-align: middle;
+}
+
+.dkg-cart-page .product-thumbnail img {
+	width: 72px;
+	height: auto;
+	border-radius: 8px;
+}
+
+.dkg-cart-page .cart-collaterals {
+	margin-top: 32px;
+}
+
+.dkg-cart-page .cart_totals {
+	padding: 24px;
+	border: 1px solid var(--dkg-border);
+	border-radius: 14px;
+	background: var(--dkg-white);
+}
+
+.dkg-cart-page .wc-proceed-to-checkout .checkout-button {
+	display: inline-flex;
+	min-height: 50px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.woocommerce-checkout .col2-set {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: clamp(24px, 4vw, 48px);
+}
+
+.woocommerce-checkout .form-row input.input-text,
+.woocommerce-checkout .form-row textarea,
+.woocommerce-checkout .form-row select {
+	width: 100%;
+	min-height: 46px;
+	padding: 10px 14px;
+	border: 1px solid var(--dkg-border);
+	border-radius: 8px;
+}
+
+.woocommerce-checkout #order_review_heading,
+.woocommerce-checkout #order_review {
+	padding: 24px;
+	border: 1px solid var(--dkg-border);
+	border-radius: 14px;
+	background: var(--dkg-cream);
+}
+
+.dkg-thankyou {
+	max-width: 720px;
+	margin: 0 auto;
+	padding: clamp(32px, 5vw, 56px) 0;
+	text-align: center;
+}
+
+.dkg-thankyou h1 {
+	margin: 0 0 12px;
+	font-family: var(--dkg-serif);
+	font-size: clamp(1.8rem, 3vw, 2.4rem);
+	font-weight: 400;
+}
+
+.dkg-thankyou__steps {
+	display: grid;
+	gap: 12px;
+	margin: 28px 0;
+	text-align: left;
+}
+
+.dkg-thankyou__steps li {
+	padding: 14px 18px;
+	border-radius: 10px;
+	background: var(--dkg-cream);
+	list-style: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+	display: grid;
+	gap: 8px;
+	padding: 0;
+	margin: 0 0 28px;
+	list-style: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a {
+	display: block;
+	padding: 12px 16px;
+	border-radius: 8px;
+	background: var(--dkg-cream);
+	font-weight: 700;
+	color: var(--dkg-dark);
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation .is-active a {
+	background: var(--dkg-green);
+	color: var(--dkg-white);
+}
+
+@media (max-width: 900px) {
+	.woocommerce-checkout .col2-set {
+		grid-template-columns: 1fr;
+	}
+}
+
+.dkg-shipping-rate-desc {
+	margin: .35rem 0 0;
+	font-size: .85rem;
+	line-height: 1.55;
+	color: var(--dkg-text-muted);
+}

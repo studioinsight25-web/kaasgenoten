@@ -1,0 +1,189 @@
+/**
+ * Aanbiedingen – categoriepagina
+ * De Kaasgenoten
+ */
+
+/* ── Hero ────────────────────────────────────────────── */
+.dkg-aanbieding-hero {
+	position: relative;
+	min-height: clamp(340px, 40vw, 500px);
+	background: var(--dkg-green) center / cover no-repeat;
+	color: var(--dkg-white);
+}
+
+.dkg-aanbieding-hero .dkg-container {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	align-content: center;
+	min-height: inherit;
+	padding-block: 56px;
+}
+
+.dkg-aanbieding-hero__badge {
+	display: inline-flex;
+	align-items: center;
+	width: fit-content;
+	margin-bottom: 14px;
+	padding: 6px 12px;
+	border-radius: 999px;
+	background: rgba(213, 166, 74, .18);
+	border: 1px solid rgba(213, 166, 74, .55);
+	color: var(--dkg-gold);
+	font-size: .72rem;
+	font-weight: 900;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+.dkg-aanbieding-hero h1 {
+	margin: 0;
+	font-family: var(--dkg-serif);
+	font-size: clamp(2.4rem, 4vw, 3.8rem);
+	font-weight: 400;
+	line-height: 1.08;
+}
+
+.dkg-aanbieding-hero__intro {
+	max-width: 580px;
+	margin: 18px 0 0;
+	font-size: 1.05rem;
+	font-weight: 600;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, .9);
+}
+
+.dkg-aanbieding-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+/* ── Highlights ──────────────────────────────────────── */
+.dkg-aanbieding-highlights {
+	padding-block: 28px 8px;
+	background: var(--dkg-cream);
+}
+
+.dkg-aanbieding-highlights__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.dkg-aanbieding-highlights__grid article {
+	padding: 22px 20px;
+	border: 1px solid var(--dkg-border);
+	border-radius: 8px;
+	background: var(--dkg-white);
+	box-shadow: 0 8px 24px rgba(16, 37, 27, .05);
+}
+
+.dkg-aanbieding-highlights__grid strong {
+	display: block;
+	margin-bottom: 8px;
+	color: var(--dkg-green);
+	font-size: .95rem;
+}
+
+.dkg-aanbieding-highlights__grid p {
+	margin: 0;
+	color: var(--dkg-muted);
+	font-size: .86rem;
+	line-height: 1.55;
+}
+
+/* ── Productgrid ─────────────────────────────────────── */
+.dkg-aanbieding-products {
+	padding-block: 24px 48px;
+	background: var(--dkg-cream);
+}
+
+.dkg-aanbieding-products__heading {
+	margin-bottom: 22px;
+}
+
+.dkg-aanbieding-products__heading h2 {
+	margin: 0 0 6px;
+	font-family: var(--dkg-serif);
+	font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+	font-weight: 400;
+	color: var(--dkg-green);
+}
+
+.dkg-aanbieding-products__heading p {
+	margin: 0;
+	color: var(--dkg-muted);
+	font-size: .92rem;
+}
+
+.dkg-aanbieding-page .dkg-product-card {
+	position: relative;
+}
+
+.dkg-sale-badge {
+	display: none;
+}
+
+.dkg-aanbieding-page .dkg-product-image {
+	position: relative;
+}
+
+.dkg-aanbieding-page .dkg-sale-badge {
+	display: inline-flex;
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	z-index: 2;
+	padding: 5px 10px;
+	border-radius: 999px;
+	background: var(--dkg-gold);
+	color: var(--dkg-green);
+	font-size: .68rem;
+	font-weight: 900;
+	letter-spacing: .05em;
+	text-transform: uppercase;
+	box-shadow: 0 6px 16px rgba(213, 166, 74, .35);
+}
+
+.dkg-aanbieding-page .dkg-product-price ins {
+	color: #8d6222;
+	font-weight: 900;
+	text-decoration: none;
+}
+
+.dkg-aanbieding-page .dkg-product-price del {
+	opacity: .55;
+	font-size: .88em;
+}
+
+.dkg-aanbieding-empty {
+	padding: 40px 28px;
+	border: 1px dashed var(--dkg-border);
+	border-radius: 10px;
+	background: var(--dkg-white);
+	text-align: center;
+}
+
+.dkg-aanbieding-empty h3 {
+	margin: 0 0 10px;
+	font-family: var(--dkg-serif);
+	font-size: 1.6rem;
+	font-weight: 400;
+	color: var(--dkg-green);
+}
+
+.dkg-aanbieding-empty p {
+	max-width: 520px;
+	margin: 0 auto 20px;
+	color: var(--dkg-muted);
+	line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 900px) {
+	.dkg-aanbieding-highlights__grid {
+		grid-template-columns: 1fr;
+	}
+}

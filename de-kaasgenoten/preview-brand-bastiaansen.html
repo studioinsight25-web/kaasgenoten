@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Voorbeeld – Merkpagina Bastiaansen | De Kaasgenoten</title>
+	<link rel="stylesheet" href="assets/css/theme.css">
+	<link rel="stylesheet" href="assets/css/components/brand-page.css">
+</head>
+<body>
+
+	<!-- Demo-schakelaar: alleen in preview, niet in WordPress -->
+	<div class="dkg-demo-bar" role="toolbar" aria-label="Preview modus">
+		<span>VOORBEELD</span>
+		<button type="button" class="is-active" data-view="none">Zonder filter</button>
+		<button type="button" data-view="koekaas">Filter: Koekaas</button>
+		<button type="button" data-view="geitenkaas">Filter: Geitenkaas</button>
+		<span>URL: <code id="demo-url">/product-category/bastiaansen/</code></span>
+	</div>
+
+	<div class="dkg-topbar">
+		<div class="dkg-container dkg-topbar-inner">
+			<span>♡ Vers van het mes, met liefde geselecteerd</span>
+			<span>▱ Gratis verzending vanaf €75</span>
+			<span>▱ Voor 15:00 besteld, morgen in huis</span>
+		</div>
+	</div>
+
+	<header class="dkg-site-header">
+		<div class="dkg-container dkg-header-inner">
+			<a class="dkg-logo" href="/">
+				<span class="dkg-logo-mark" aria-hidden="true">
+					<svg viewBox="0 0 62 45"><path d="M7 17 31 5l24 12v21H7Z"></path><path d="M15 20h32M20 31h4m12 0h4M29 15h4"></path></svg>
+				</span>
+				<span class="dkg-logo-text">
+					<strong>De Kaasgenoten</strong>
+					<small>Ambachtelijke kaas</small>
+				</span>
+			</a>
+			<nav class="dkg-primary-nav">
+				<ul class="dkg-menu">
+					<li><a href="/kaas-delicatessen/">Kaas & Delicatessen</a></li>
+					<li><a href="/product-category/bastiaansen/">Bastiaansen</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul>
+			</nav>
+			<div class="dkg-header-actions">
+				<a href="/?s=">⌕</a>
+				<a href="/mijn-account/">♙</a>
+				<a class="dkg-cart-link" href="/winkelwagen/">🛒<span class="dkg-cart-count">0</span></a>
+			</div>
+		</div>
+	</header>
+
+	<main id="primary" class="dkg-main">
+
+		<!-- 1. HERO -->
+		<section class="dkg-brand-hero" style="background-image: url('assets/images/product-boeren.jpg');">
+			<div class="dkg-container">
+				<p class="dkg-eyebrow">Biologische kaas</p>
+				<h1>Bastiaansen</h1>
+				<p class="dkg-brand-intro">Ambachtelijke biologische kazen van Bastiaansen — gemaakt met respect voor dier, natuur en smaak. Kies hieronder welk soort kaas je wilt ontdekken.</p>
+			</div>
+		</section>
+
+		<!-- 2. INTRO -->
+		<section class="dkg-brand-lead">
+			<div class="dkg-container">
+				<p>Bastiaansen staat bekend om hun biologische kazen van hoge kwaliteit. Bij De Kaasgenoten selecteren we per soort de mooiste stukken — van romige koekaas tot karaktervolle geitenkaas.</p>
+			</div>
+		</section>
+
+		<!-- 3. FILTERKAARTEN -->
+		<section class="dkg-brand-filters" aria-label="Kies een soort kaas">
+			<div class="dkg-container">
+				<h2 class="dkg-brand-filters__heading">Welke soort kaas zoek je?</h2>
+				<div class="dkg-brand-filter-grid" id="filter-cards">
+
+					<a href="?filter=koekaas" class="dkg-brand-filter-card" data-filter="koekaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Koekaas</h3>
+						<p>Romige biologische kazen van koemelk.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=geitenkaas" class="dkg-brand-filter-card" data-filter="geitenkaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Geitenkaas</h3>
+						<p>Zachte en karaktervolle kazen van geitenmelk.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=schapenkaas" class="dkg-brand-filter-card" data-filter="schapenkaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Schapenkaas</h3>
+						<p>Volle biologische kazen van schapenmelk.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=kruidenkaas" class="dkg-brand-filter-card" data-filter="kruidenkaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Kruidenkaas</h3>
+						<p>Biologische kazen met verfijnde kruiden.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=magere-kaas" class="dkg-brand-filter-card" data-filter="magere-kaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Magere kaas</h3>
+						<p>Lichter van smaak, vol van kwaliteit.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=roodbacterie-kaas" class="dkg-brand-filter-card" data-filter="roodbacterie-kaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Roodbacterie kaas</h3>
+						<p>Zacht, smeuïg en rijk van karakter.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=weidevogel-kaas" class="dkg-brand-filter-card" data-filter="weidevogel-kaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Weidevogel kaas</h3>
+						<p>Biologische kaas met aandacht voor natuur en landschap.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+					<a href="?filter=blauwe-kaas" class="dkg-brand-filter-card" data-filter="blauwe-kaas">
+						<span class="dkg-brand-filter-card__icon" aria-hidden="true">◎</span>
+						<h3>Blauwe kaas</h3>
+						<p>Krachtige biologische blauwaderkazen met een rijke, karaktervolle smaak.</p>
+						<span class="dkg-brand-filter-card__arrow">Bekijk assortiment →</span>
+					</a>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- 4a. HINT zonder filter -->
+		<section class="dkg-brand-hint" id="brand-hint">
+			<div class="dkg-container">
+				<p>Kies hierboven een soort kaas om het assortiment te bekijken.</p>
+			</div>
+		</section>
+
+		<!-- 4b. PRODUCTGRID met actief filter -->
+		<section class="dkg-brand-products" id="brand-products" hidden>
+			<div class="dkg-container">
+				<div class="dkg-brand-products__heading">
+					<h2 id="products-title">Bastiaansen Koekaas</h2>
+					<a href="/product-category/bastiaansen/" id="clear-filter">Alle soorten tonen</a>
+				</div>
+				<div class="dkg-product-grid" id="products-grid">
+					<!-- Koekaas producten -->
+					<article class="dkg-product-card" data-filter-group="koekaas">
+						<a class="dkg-product-image" href="#"><img src="assets/images/product-boeren.jpg" alt=""></a>
+						<div class="dkg-product-body">
+							<h3>Bastiaansen Jong Belegen</h3>
+							<p>500 gram</p>
+							<div class="dkg-product-price">€ 9,95</div>
+							<div class="dkg-product-actions">
+								<a class="button dkg-add-to-cart" href="#">In winkelwagen</a>
+								<span class="dkg-wishlist">♡</span>
+							</div>
+						</div>
+					</article>
+					<article class="dkg-product-card" data-filter-group="koekaas">
+						<a class="dkg-product-image" href="#"><img src="assets/images/product-extra.jpg" alt=""></a>
+						<div class="dkg-product-body">
+							<h3>Bastiaansen Extra Belegen</h3>
+							<p>500 gram</p>
+							<div class="dkg-product-price">€ 10,95</div>
+							<div class="dkg-product-actions">
+								<a class="button dkg-add-to-cart" href="#">In winkelwagen</a>
+								<span class="dkg-wishlist">♡</span>
+							</div>
+						</div>
+					</article>
+					<article class="dkg-product-card" data-filter-group="koekaas">
+						<a class="dkg-product-image" href="#"><img src="assets/images/product-oude.jpg" alt=""></a>
+						<div class="dkg-product-body">
+							<h3>Bastiaansen Oud</h3>
+							<p>500 gram</p>
+							<div class="dkg-product-price">€ 11,95</div>
+							<div class="dkg-product-actions">
+								<a class="button dkg-add-to-cart" href="#">In winkelwagen</a>
+								<span class="dkg-wishlist">♡</span>
+							</div>
+						</div>
+					</article>
+					<!-- Geitenkaas producten -->
+					<article class="dkg-product-card" data-filter-group="geitenkaas" hidden>
+						<a class="dkg-product-image" href="#"><img src="assets/images/product-geiten.jpg" alt=""></a>
+						<div class="dkg-product-body">
+							<h3>Bastiaansen Geitenkaas Jong</h3>
+							<p>300 gram</p>
+							<div class="dkg-product-price">€ 8,95</div>
+							<div class="dkg-product-actions">
+								<a class="button dkg-add-to-cart" href="#">In winkelwagen</a>
+								<span class="dkg-wishlist">♡</span>
+							</div>
+						</div>
+					</article>
+					<article class="dkg-product-card" data-filter-group="geitenkaas" hidden>
+						<a class="dkg-product-image" href="#"><img src="assets/images/product-truffel.jpg" alt=""></a>
+						<div class="dkg-product-body">
+							<h3>Bastiaansen Geitenkaas Belegen</h3>
+							<p>300 gram</p>
+							<div class="dkg-product-price">€ 9,50</div>
+							<div class="dkg-product-actions">
+								<a class="button dkg-add-to-cart" href="#">In winkelwagen</a>
+								<span class="dkg-wishlist">♡</span>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="dkg-footer">
+		<div class="dkg-container">
+			<p style="margin:0;padding:24px 0;color:rgba(255,255,255,.6);font-size:.85rem;">Preview merkpagina-feature – nog niet live in WordPress</p>
+		</div>
+	</footer>
+
+	<script>
+	(function () {
+		var filters = {
+			koekaas:     { title: 'Bastiaansen Koekaas',     url: '/product-category/bastiaansen/?filter=koekaas' },
+			geitenkaas:  { title: 'Bastiaansen Geitenkaas',  url: '/product-category/bastiaansen/?filter=geitenkaas' }
+		};
+
+		var hint     = document.getElementById('brand-hint');
+		var products = document.getElementById('brand-products');
+		var title    = document.getElementById('products-title');
+		var urlEl    = document.getElementById('demo-url');
+		var cards    = document.querySelectorAll('.dkg-brand-filter-card');
+		var items    = document.querySelectorAll('[data-filter-group]');
+		var buttons  = document.querySelectorAll('.dkg-demo-bar button');
+
+		function setView(filter) {
+			cards.forEach(function (c) {
+				c.classList.toggle('is-active', c.dataset.filter === filter);
+			});
+
+			if (!filter) {
+				hint.hidden = false;
+				products.hidden = true;
+				urlEl.textContent = '/product-category/bastiaansen/';
+				return;
+			}
+
+			hint.hidden = true;
+			products.hidden = false;
+			title.textContent = filters[filter] ? filters[filter].title : 'Bastiaansen';
+			urlEl.textContent = filters[filter] ? filters[filter].url : '/product-category/bastiaansen/?filter=' + filter;
+
+			items.forEach(function (item) {
+				item.hidden = item.dataset.filterGroup !== filter;
+			});
+		}
+
+		buttons.forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				buttons.forEach(function (b) { b.classList.remove('is-active'); });
+				btn.classList.add('is-active');
+				var view = btn.dataset.view;
+				setView(view === 'none' ? null : view);
+			});
+		});
+
+		cards.forEach(function (card) {
+			card.addEventListener('click', function (e) {
+				e.preventDefault();
+				var f = card.dataset.filter;
+				buttons.forEach(function (b) { b.classList.remove('is-active'); });
+				var match = document.querySelector('.dkg-demo-bar button[data-view="' + f + '"]');
+				if (match) match.classList.add('is-active');
+				setView(f);
+			});
+		});
+
+		document.getElementById('clear-filter').addEventListener('click', function (e) {
+			e.preventDefault();
+			buttons.forEach(function (b) { b.classList.remove('is-active'); });
+			document.querySelector('.dkg-demo-bar button[data-view="none"]').classList.add('is-active');
+			setView(null);
+		});
+	})();
+	</script>
+</body>
+</html>

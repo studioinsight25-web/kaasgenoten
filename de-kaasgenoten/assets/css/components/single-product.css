@@ -1,0 +1,208 @@
+/**
+ * Single product (PDP)
+ * De Kaasgenoten
+ */
+
+.dkg-single-product__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+	gap: clamp(28px, 4vw, 56px);
+	align-items: start;
+	margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.dkg-single-product__gallery .woocommerce-product-gallery {
+	margin: 0;
+}
+
+.dkg-single-product__summary .product_title {
+	margin: 0 0 12px;
+	font-family: var(--dkg-serif);
+	font-size: clamp(1.8rem, 3vw, 2.6rem);
+	font-weight: 400;
+	line-height: 1.15;
+	color: var(--dkg-dark);
+}
+
+.dkg-single-product__summary .price {
+	margin-bottom: 18px;
+	font-size: 1.35rem;
+	font-weight: 800;
+	color: var(--dkg-gold-dark);
+}
+
+.dkg-single-product__summary .woocommerce-product-details__short-description {
+	margin-bottom: 22px;
+	color: var(--dkg-muted);
+	line-height: 1.65;
+}
+
+.dkg-single-product__summary .variations {
+	width: 100%;
+	margin-bottom: 18px;
+}
+
+.dkg-single-product__summary .variations td {
+	padding: 8px 0;
+	vertical-align: middle;
+}
+
+.dkg-single-product__summary .variations label {
+	font-weight: 800;
+	color: var(--dkg-dark);
+}
+
+.dkg-single-product__summary .variations select {
+	width: 100%;
+	min-height: 46px;
+	padding: 10px 14px;
+	border: 1px solid var(--dkg-border);
+	border-radius: 8px;
+	background: var(--dkg-white);
+	font-size: .95rem;
+}
+
+.dkg-single-product__summary .single_add_to_cart_button {
+	min-height: 50px;
+	padding-inline: 28px;
+}
+
+.dkg-single-product__trust {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 18px;
+	margin-top: 24px;
+	padding-top: 20px;
+	border-top: 1px solid var(--dkg-border);
+}
+
+.dkg-single-product__trust span {
+	font-size: .82rem;
+	font-weight: 700;
+	color: var(--dkg-muted);
+}
+
+.dkg-single-product .woocommerce-tabs {
+	margin-top: 12px;
+}
+
+.dkg-single-product .woocommerce-tabs ul.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 0;
+	margin: 0 0 20px;
+	list-style: none;
+	border-bottom: 1px solid var(--dkg-border);
+}
+
+.dkg-single-product .woocommerce-tabs ul.tabs li {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+
+.dkg-single-product .woocommerce-tabs ul.tabs li a {
+	display: block;
+	padding: 12px 18px;
+	border-radius: 8px 8px 0 0;
+	font-weight: 800;
+	color: var(--dkg-muted);
+}
+
+.dkg-single-product .woocommerce-tabs ul.tabs li.active a {
+	background: var(--dkg-cream);
+	color: var(--dkg-dark);
+}
+
+.dkg-single-product .woocommerce-Tabs-panel {
+	padding: 8px 0 24px;
+	color: var(--dkg-dark);
+	line-height: 1.7;
+}
+
+.dkg-single-product .related.products > h2 {
+	margin: 0 0 24px;
+	font-family: var(--dkg-serif);
+	font-size: clamp(1.5rem, 2.4vw, 2rem);
+	font-weight: 400;
+}
+
+.dkg-single-product .related.products ul.products {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 22px;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.dkg-sticky-atc {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10040;
+	padding: 12px 0;
+	background: rgba(255, 255, 255, .96);
+	border-top: 1px solid var(--dkg-border);
+	box-shadow: 0 -8px 30px rgba(16, 37, 27, .08);
+	backdrop-filter: blur(10px);
+}
+
+.dkg-sticky-atc[hidden] {
+	display: none;
+}
+
+.dkg-sticky-atc__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.dkg-sticky-atc__info {
+	display: grid;
+	gap: 2px;
+	min-width: 0;
+}
+
+.dkg-sticky-atc__info strong {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: .92rem;
+}
+
+.dkg-sticky-atc__info span {
+	font-size: .88rem;
+	font-weight: 800;
+	color: var(--dkg-gold-dark);
+}
+
+@media (max-width: 900px) {
+	.dkg-single-product__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.dkg-single-product .related.products ul.products {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 560px) {
+	.dkg-single-product .related.products ul.products {
+		grid-template-columns: 1fr;
+	}
+
+	.dkg-sticky-atc__inner {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.dkg-sticky-atc .dkg-button {
+		width: 100%;
+		text-align: center;
+	}
+}

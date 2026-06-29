@@ -22,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array<string, mixed>
  */
 function dkg_contact_page_content() {
+	$c = dkg_company_details();
+
 	return array(
 		'hero'    => array(
 			'eyebrow' => __( 'Contact', 'de-kaasgenoten' ),
@@ -38,19 +40,19 @@ function dkg_contact_page_content() {
 				array(
 					'icon'  => 'pin',
 					'label' => __( 'Adres', 'de-kaasgenoten' ),
-					'lines' => array( 'De Veken 122b', '1716 KG Opmeer' ),
+					'lines' => array( $c['street'], $c['postal'] . ' ' . $c['city'] ),
 				),
 				array(
 					'icon'  => 'phone',
 					'label' => __( 'Telefoon', 'de-kaasgenoten' ),
-					'lines' => array( '0416 - 123 456' ),
-					'url'   => 'tel:+31416123456',
+					'lines' => array( $c['phone'] ),
+					'url'   => 'tel:' . $c['phone_href'],
 				),
 				array(
 					'icon'  => 'mail',
 					'label' => __( 'E-mail', 'de-kaasgenoten' ),
-					'lines' => array( 'info@de-kaasgenoten.nl' ),
-					'url'   => 'mailto:info@de-kaasgenoten.nl',
+					'lines' => array( $c['email'] ),
+					'url'   => 'mailto:' . $c['email'],
 				),
 				array(
 					'icon'  => 'clock',
@@ -58,11 +60,7 @@ function dkg_contact_page_content() {
 					'lines' => array( __( 'Ma t/m vr: 9:00 - 17:00', 'de-kaasgenoten' ), __( 'Za & zo: gesloten', 'de-kaasgenoten' ) ),
 				),
 			),
-			'socials' => array(
-				array( 'icon' => 'facebook', 'label' => 'Facebook', 'url' => 'https://www.facebook.com/' ),
-				array( 'icon' => 'instagram', 'label' => 'Instagram', 'url' => 'https://www.instagram.com/' ),
-				array( 'icon' => 'pinterest', 'label' => 'Pinterest', 'url' => 'https://www.pinterest.com/' ),
-			),
+			'socials' => dkg_social_links(),
 		),
 		// OpenStreetMap embed — pas de coördinaten/bbox aan op het juiste adres.
 		// Snel bijwerken: ga naar openstreetmap.org, zoek het adres, klik "Delen"
@@ -76,8 +74,8 @@ function dkg_contact_page_content() {
 		'trust'   => array(
 			array(
 				'icon'  => 'truck',
-				'title' => __( 'Snelle verzending', 'de-kaasgenoten' ),
-				'text'  => __( 'Binnen 1-2 werkdagen in huis', 'de-kaasgenoten' ),
+				'title' => __( 'Zorgvuldig verzonden', 'de-kaasgenoten' ),
+				'text'  => __( 'Zo snel mogelijk, met zorg verwerkt', 'de-kaasgenoten' ),
 			),
 			array(
 				'icon'  => 'shield',
@@ -87,7 +85,7 @@ function dkg_contact_page_content() {
 			array(
 				'icon'  => 'knife',
 				'title' => __( 'Vers afgesneden', 'de-kaasgenoten' ),
-				'text'  => __( 'Op bestelling vers van het mes', 'de-kaasgenoten' ),
+				'text'  => __( 'Vers afgesneden op bestelling', 'de-kaasgenoten' ),
 			),
 			array(
 				'icon'  => 'star',

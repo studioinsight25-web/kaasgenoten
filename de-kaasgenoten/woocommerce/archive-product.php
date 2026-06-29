@@ -15,6 +15,9 @@ $filter_terms        = dkg_product_archive_filter_terms();
 $luxe                = null;
 $hero_image          = '';
 $child_cards         = array();
+$brand               = null;
+$active_filter       = '';
+$filter_config       = null;
 
 $term = null;
 
@@ -42,12 +45,85 @@ if ( $term instanceof WP_Term ) {
 	$archive_title       = $term->name;
 	$archive_description = term_description( $term );
 
-	if ( function_exists( 'dkg_luxe_data_for_term' ) ) {
+	if ( function_exists( 'dkg_get_brand_page' ) ) {
+		$brand = dkg_get_brand_page( $term->slug );
+	}
+
+	if ( ! $brand && function_exists( 'dkg_luxe_data_for_term' ) ) {
 		$luxe = dkg_luxe_data_for_term( $term->slug );
 	}
 
 	if ( function_exists( 'dkg_category_collection_cards' ) ) {
 		$child_cards = dkg_category_collection_cards( $term->term_id );
+	}
+}
+
+if ( $brand ) {
+	$active_filter   = dkg_brand_active_filter_slug();
+	$filter_config   = $active_filter ? dkg_brand_filter_by_slug( $brand, $active_filter ) : null;
+	$has_filters     = ! empty( $brand['filters'] );
+	$direct_products = ! empty( $brand['direct_products'] );
+	?>
+	<main id="primary" class="dkg-main dkg-woo dkg-brand-page">
+		<?php
+		get_template_part( 'template-parts/brand/brand-hero', null, array( 'brand' => $brand, 'term' => $term ) );
+		get_template_part( 'template-parts/brand/brand-lead', null, array( 'brand' => $brand ) );
+
+		if ( $has_filters ) {
+			get_template_part(
+				'template-parts/brand/filter-cards',
+				null,
+				array(
+					'brand'         => $brand,
+					'term'          => $term,
+					'active_filter' => $active_filter,
+				)
+			);
+		}
+
+		if ( $filter_config ) {
+			get_template_part(
+				'template-parts/brand/filtered-product-grid',
+				null,
+				array(
+					'brand'  => $brand,
+					'term'   => $term,
+					'filter' => $filter_config,
+				)
+			);
+		} elseif ( $direct_products ) {
+			get_template_part(
+				'template-parts/brand/brand-product-grid',
+				null,
+				array(
+					'brand' => $brand,
+					'term'  => $term,
+				)
+			);
+		} else {
+			get_template_part( 'template-parts/brand/brand-hint', null, array( 'brand' => $brand ) );
+		}
+		?>
+	</main>
+	<?php
+	get_footer( 'shop' );
+	return;
+}
+
+if ( $term instanceof WP_Term && function_exists( 'dkg_is_aanbieding_page' ) && dkg_is_aanbieding_page( $term ) ) {
+	$aanbieding_luxe = function_exists( 'dkg_luxe_page_data' ) ? dkg_luxe_page_data( 'aanbieding' ) : null;
+
+	if ( $aanbieding_luxe ) {
+		get_template_part(
+			'template-parts/aanbieding/page',
+			null,
+			array(
+				'term' => $term,
+				'luxe' => $aanbieding_luxe,
+			)
+		);
+		get_footer( 'shop' );
+		return;
 	}
 }
 
@@ -71,7 +147,10 @@ if ( $hero_image ) {
 	$hero_style    = "background-image: linear-gradient(90deg, rgba(16,37,27,.94), rgba(16,37,27,.68) 42%, rgba(16,37,27,.15)), url('" . esc_url( $hero_image ) . "');";
 }
 ?>
-<main id="primary" class="dkg-main dkg-woo<?php echo $luxe ? ' dkg-cat-page' : ''; ?>">
+	<main id="primary" class="dkg-main dkg-woo<?php echo $luxe ? ' dkg-cat-page' : ''; ?><?php echo ( $luxe && dkg_luxe_has_split_hero( $luxe ) ) ? ' dkg-cat-page--split' : ''; ?>">
+	<?php if ( $luxe && dkg_luxe_has_split_hero( $luxe ) ) : ?>
+		<?php dkg_luxe_render_split_hero( $luxe, $archive_title, $luxe['intro'] ); ?>
+	<?php else : ?>
 	<section class="<?php echo esc_attr( $hero_classes ); ?>"<?php echo $hero_style ? ' style="' . esc_attr( $hero_style ) . '"' : ''; ?>>
 		<div class="dkg-container">
 			<?php woocommerce_breadcrumb( array( 'wrap_before' => '<nav class="dkg-woo-breadcrumb" aria-label="' . esc_attr__( 'Breadcrumb', 'de-kaasgenoten' ) . '">', 'wrap_after' => '</nav>' ) ); ?>
@@ -88,15 +167,32 @@ if ( $hero_image ) {
 			<?php endif; ?>
 		</div>
 	</section>
+	<?php endif; ?>
 
 	<?php
 	if ( $luxe ) {
-		dkg_luxe_render_lead( $luxe );
+		if ( dkg_luxe_has_split_hero( $luxe ) ) {
+			dkg_luxe_render_usps( $luxe );
+			dkg_luxe_render_editorial_content( $luxe );
+		} else {
+			dkg_luxe_render_lead( $luxe );
+			dkg_luxe_render_story( $luxe );
+		}
+
+		dkg_luxe_render_brand_spotlights( $luxe );
+
+		if ( ! empty( $luxe['collections'] ) ) {
+			dkg_luxe_render_collections( $luxe );
+		}
 	}
 	?>
 
-	<?php if ( $has_products ) : ?>
-		<?php if ( $luxe && ! empty( $child_cards ) ) : ?>
+	<?php
+	$luxe_show_products = ! $luxe || ! isset( $luxe['show_products'] ) || ! empty( $luxe['show_products'] );
+	?>
+
+	<?php if ( $has_products && $luxe_show_products ) : ?>
+		<?php if ( $luxe && ! empty( $child_cards ) && dkg_luxe_should_render_child_collections( $luxe ) ) : ?>
 			<?php dkg_luxe_render_collections( $luxe, __( 'Shop per categorie', 'de-kaasgenoten' ), $child_cards ); ?>
 		<?php endif; ?>
 
@@ -151,7 +247,7 @@ if ( $hero_image ) {
 	<?php elseif ( $luxe ) : ?>
 		<?php
 		// Lege categorie met landingsdata: rijke landingsinhoud zonder dode kaarten.
-		if ( ! empty( $child_cards ) ) {
+		if ( ! empty( $child_cards ) && dkg_luxe_should_render_child_collections( $luxe ) ) {
 			dkg_luxe_render_collections( $luxe, '', $child_cards );
 		}
 		?>
@@ -169,11 +265,13 @@ if ( $hero_image ) {
 		</div>
 	<?php endif; ?>
 
-	<?php if ( $luxe ) : ?>
+	<?php if ( $luxe && ! dkg_luxe_has_split_hero( $luxe ) ) : ?>
 		<?php
 		dkg_luxe_render_usps( $luxe );
 		dkg_luxe_render_cta( $luxe );
 		?>
+	<?php elseif ( $luxe ) : ?>
+		<?php dkg_luxe_render_cta( $luxe ); ?>
 	<?php endif; ?>
 </main>
 <?php
